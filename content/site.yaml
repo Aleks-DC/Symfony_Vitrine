@@ -1,0 +1,19 @@
+brand:
+    name: "Côte de Lumière Technologies"
+    primary: "#0e7490"   # cyan-700
+    accent:  "#06b6d4"   # cyan-500
+
+layout:
+    sections:
+        contact: false
+        cta: false
+        footer: false
+        header: true
+        hero: true
+        logo_cloud: true
+        pricing: false
+        process: true
+        projects: false
+        services: true
+        stats: false
+        testimonials: false

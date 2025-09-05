@@ -20,9 +20,6 @@
     {# 5. Stats / KPIs (component – données passées par le contrôleur) #}
     <twig:Stats :items="stats" />
 
-    {# 6. Portfolio (component dynamique) #}
-    <twig:Portfolio :projects="projects" />
-
     {# 7. Testimonials (component dynamique) #}
     <twig:Testimonials :quotes="testimonials" />
 
@@ -40,7 +37,4 @@
 
     {# 12. Footer (component global) #}
     <twig:Footer />
-
-    {# 13. Modal projet (component réutilisable, en bas du DOM) #}
-    <twig:ProjectModal :project="selectedProject" />
 {% endblock %}
