@@ -10,11 +10,19 @@ final readonly class ConfigLoader
     public function __construct(private string $contentDir) {}
 
     /**
-     * @param string $filename
-     * @return array
+     * Load a YAML file from content/<name>.yaml and return it as array.
+     * Returns [] if the file is missing or invalid.
      */
-    public function load(string $filename): array
+    public function get(string $name): array
     {
-        return Yaml::parseFile($this->contentDir.'/'.$filename);
+        $file = rtrim($this->contentDir, "/\\") . DIRECTORY_SEPARATOR . $name . '.yaml';
+
+        if (!is_file($file)) {
+            return []; // safe default
+        }
+
+        $data = Yaml::parseFile($file);
+
+        return is_array($data) ? $data : [];
     }
 }

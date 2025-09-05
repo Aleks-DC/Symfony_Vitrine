@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Service\HomepageProvider;
@@ -11,6 +12,11 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(HomepageProvider $provider): Response
     {
-        return $this->render('home/index.html.twig', $provider->get());
+        $vm = $provider->getViewModel();   // <-- here
+
+        // always pass selectedProject to avoid 500s in Twig
+        $vm['selectedProject'] = $vm['selectedProject'] ?? null;
+
+        return $this->render('home/index.html.twig', $vm);
     }
 }
