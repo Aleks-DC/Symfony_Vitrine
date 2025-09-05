@@ -1,17 +1,64 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="{{ app.request.locale|default('fr') }}" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {# --------- Titres & descriptions personnalisables --------- #}
+    <title>{% block title %}Aleks DC – Développeur web freelance{% endblock %}</title>
+    <meta name="description"
+          content="{% block meta_description %}Développement de sites et web-apps performants en Pays de la Loire et partout en France.{% endblock %}">
+    <link rel="canonical" href="{{ absolute_url(app.request.uri) }}">
+
+    {# --------- Open Graph & Twitter Cards (⟹ partage réseaux) --------- #}
+    <meta property="og:type"        content="website">
+    <meta property="og:title"       content="{{ block('title') }}">
+    <meta property="og:description" content="{{ block('meta_description')|striptags }}">
+    <meta property="og:url"         content="{{ absolute_url(app.request.uri) }}">
+    <meta property="og:image"       content="{{ asset('images/social-preview.jpg') }}">
+    <meta name="twitter:card"       content="summary_large_image">
+
+    {# --------- SEO géographique (optionnel mais utile localement) --------- #}
+    <meta name="geo.region"    content="FR-85">
+    <meta name="geo.placename" content="Sainte-Flaive-des-Loups">
+    <meta name="geo.position"  content="46.636;-1.676">
+
+    {# --------- Structured Data (JSON-LD) --------- #}
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Person",
+          "name":"Aleksi D.",
+          "alternateName":"Aleks DC",
+          "jobTitle":"Développeur web freelance",
+          "address":{"@type":"PostalAddress","addressLocality":"Sainte-Flaive-des-Loups","addressRegion":"Pays de la Loire","addressCountry":"FR"},
+          "areaServed":"FR",
+          "url":"{{ absolute_url(path('app_home')) }}"
+    }
+    </script>
+
+    {# --------- Feuilles de styles (Webpack Encore) --------- #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {# --------- Scripts compilés (Webpack Encore) --------- #}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+    {# --------- Hook pour <head> supplémentaire --------- #}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="antialiased text-gray-900 bg-white">
+{# ------------------ Contenu (à surcharger) ------------------ #}
+{% block body %}{% endblock %}
+
+
+
+{# --------- Hook pour scripts additionnels --------- #}
+{% block extra_scripts %}{% endblock %}
+</body>
 </html>

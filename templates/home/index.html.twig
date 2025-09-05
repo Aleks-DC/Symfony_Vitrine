@@ -1,0 +1,46 @@
+{# templates/home.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Aleks DC – Développeur web freelance Symfony{% endblock %}
+{% block meta_description %}Création de sites vitrines et web-apps performantes en Pays de la Loire et partout en France.{% endblock %}
+
+{% block body %}
+    {# 1. Header (component global) #}
+    <twig:Header />
+
+    {# 2. Hero (partial) #}
+    {% include 'partials/_hero.html.twig' %}
+
+    {# 3. Logo cloud (partial) #}
+    {% include 'partials/_logo_cloud.html.twig' %}
+
+    {# 4. Services / Features (partial) #}
+    {% include 'partials/_services.html.twig' %}
+
+    {# 5. Stats / KPIs (component – données passées par le contrôleur) #}
+    <twig:Stats :items="stats" />
+
+    {# 6. Portfolio (component dynamique) #}
+    <twig:Portfolio :projects="projects" />
+
+    {# 7. Testimonials (component dynamique) #}
+    <twig:Testimonials :quotes="testimonials" />
+
+    {# 8. Process / Méthodo (partial) #}
+    {% include 'partials/_process.html.twig' %}
+
+    {# 9. Pricing / Packages (component – facultatif) #}
+    <twig:Pricing :tiers="pricing" />
+
+    {# 10. CTA plein écran (partial) #}
+    {% include 'partials/_cta.html.twig' %}
+
+    {# 11. Contact form (component live-ready) #}
+    <twig:ContactForm />
+
+    {# 12. Footer (component global) #}
+    <twig:Footer />
+
+    {# 13. Modal projet (component réutilisable, en bas du DOM) #}
+    <twig:ProjectModal :project="selectedProject" />
+{% endblock %}
