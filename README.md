@@ -73,14 +73,6 @@ npm run watch
 npm run build
 ```
 
-## ✅ Commit et push
-Depuis ton terminal intégré PhpStorm :
-```bash
-git add README.md
-git commit -m "Add README with project documentation and license badge"
-git push
-```
-
 ---
 
 ## 📜 Licence
