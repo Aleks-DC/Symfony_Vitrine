@@ -10,7 +10,7 @@ layout:
         footer: false
         header: true
         hero: true
-        logo_cloud: true
+        logo_cloud: false
         pricing: false
         process: true
         projects: false
