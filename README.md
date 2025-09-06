@@ -2,7 +2,7 @@
 
 Un template **Symfony + Twig + TailwindCSS** pour créer rapidement des sites vitrines modernes, scalables et accessibles.
 
-![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![License: Commercial](https://img.shields.io/badge/License-Commercial-blue.svg)
 
 ---
 
@@ -81,8 +81,8 @@ Développé par [Aleks-DC](https://github.com/Aleks-DC)
 ---
 
 ## 📜 Licence
-Distribué sous licence **Apache 2.0**.  
-Voir le fichier [LICENSE](./LICENSE) pour plus de détails.
+Distribué sous **licence commerciale**.  
+Consultez le fichier [LICENSE.md](./LICENSE.md) pour les conditions d’utilisation (Starter, Pro, Agency).
 
 ---
 
