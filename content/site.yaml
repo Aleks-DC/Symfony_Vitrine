@@ -1,7 +1,5 @@
 brand:
-    name: "Côte de Lumière Technologies"
-    primary: "#0e7490"   # cyan-700
-    accent:  "#06b6d4"   # cyan-500
+    name: "Aleks_DC"
 
 layout:
     sections:
