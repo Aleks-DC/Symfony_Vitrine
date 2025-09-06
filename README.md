@@ -86,6 +86,21 @@ Consultez le fichier [LICENSE.md](./LICENSE.md) pour les conditions d’utilisat
 
 ---
 
+## 📊 License Comparison Table
+
+| Feature                     | **Starter** | **Pro** | **Agency** |
+|-----------------------------|-------------|---------|------------|
+| **Usage scope**             | 1 project   | Unlimited projects | Unlimited projects |
+| **Target users**            | Individuals | Freelancers / small studios | Agencies / teams |
+| **Code modification**       | ✔ Allowed   | ✔ Allowed | ✔ Allowed |
+| **Internal team sharing**   | ✖ Not allowed | ✖ Not allowed | ✔ Allowed |
+| **Redistribution / resale** | ✖ Forbidden | ✖ Forbidden | ✖ Forbidden |
+| **Support**                 | Basic       | Priority email | Advanced + Early access |
+| **Updates**                 | 12 months   | 12 months | 12 months |
+| **Best for**                | Personal / single site | Devs serving multiple clients | Agencies building at scale |
+
+---
+
 
 
 
