@@ -3,6 +3,9 @@
 Un template **Symfony + Twig + TailwindCSS** pour créer rapidement des sites vitrines modernes, scalables et accessibles.
 
 ![License: Commercial](https://img.shields.io/badge/License-Commercial-blue.svg)
+![Starter License](https://img.shields.io/badge/License-Starter-green.svg)
+![Pro License](https://img.shields.io/badge/License-Pro-orange.svg)
+![Agency License](https://img.shields.io/badge/License-Agency-purple.svg)
 
 ---
 
@@ -88,8 +91,8 @@ Consultez le fichier [LICENSE.md](./LICENSE.md) pour les conditions d’utilisat
 
 ## 📊 License Comparison Table
 
-| Feature                     | **Starter** | **Pro** | **Agency** |
-|-----------------------------|-------------|---------|------------|
+| Feature                     | ![Starter](https://img.shields.io/badge/Starter-green.svg) | ![Pro](https://img.shields.io/badge/Pro-orange.svg) | ![Agency](https://img.shields.io/badge/Agency-purple.svg) |
+|-----------------------------|------------------------------------------------------------|-----------------------------------------------------|----------------------------------------------------------|
 | **Usage scope**             | 1 project   | Unlimited projects | Unlimited projects |
 | **Target users**            | Individuals | Freelancers / small studios | Agencies / teams |
 | **Code modification**       | ✔ Allowed   | ✔ Allowed | ✔ Allowed |
@@ -98,6 +101,7 @@ Consultez le fichier [LICENSE.md](./LICENSE.md) pour les conditions d’utilisat
 | **Support**                 | Basic       | Priority email | Advanced + Early access |
 | **Updates**                 | 12 months   | 12 months | 12 months |
 | **Best for**                | Personal / single site | Devs serving multiple clients | Agencies building at scale |
+
 
 ---
 

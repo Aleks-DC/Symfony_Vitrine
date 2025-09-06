@@ -67,8 +67,8 @@ In case of dispute, the courts of **Aleks_DC’s registered office** shall have 
 
 ## 📊 License Comparison Table
 
-| Feature                     | **Starter** | **Pro** | **Agency** |
-|-----------------------------|-------------|---------|------------|
+| Feature                     | ![Starter](https://img.shields.io/badge/Starter-green.svg) | ![Pro](https://img.shields.io/badge/Pro-orange.svg) | ![Agency](https://img.shields.io/badge/Agency-purple.svg) |
+|-----------------------------|------------------------------------------------------------|-----------------------------------------------------|----------------------------------------------------------|
 | **Usage scope**             | 1 project   | Unlimited projects | Unlimited projects |
 | **Target users**            | Individuals | Freelancers / small studios | Agencies / teams |
 | **Code modification**       | ✔ Allowed   | ✔ Allowed | ✔ Allowed |
@@ -77,5 +77,6 @@ In case of dispute, the courts of **Aleks_DC’s registered office** shall have 
 | **Support**                 | Basic       | Priority email | Advanced + Early access |
 | **Updates**                 | 12 months   | 12 months | 12 months |
 | **Best for**                | Personal / single site | Devs serving multiple clients | Agencies building at scale |
+
 
 ---
