@@ -6,6 +6,10 @@ Un template **Symfony + Twig + TailwindCSS** pour créer rapidement des sites vi
 ![Starter License](https://img.shields.io/badge/License-Starter-green.svg)
 ![Pro License](https://img.shields.io/badge/License-Pro-orange.svg)
 ![Agency License](https://img.shields.io/badge/License-Agency-purple.svg)
+![Symfony](https://img.shields.io/badge/Symfony-7.3-black?logo=symfony)
+![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-38B2AC?logo=tailwind-css&logoColor=white)
+![Webpack Encore](https://img.shields.io/badge/Webpack%20Encore-5.2-blue?logo=webpack)
 
 ---
 
