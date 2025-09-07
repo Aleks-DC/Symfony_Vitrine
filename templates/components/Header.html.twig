@@ -84,74 +84,57 @@
     </header>
 
     <script>
-        (function(){
-            const headerEl = document.querySelector('header');
+        (function () {
+            // 1) Mesurer la VRAIE hauteur de la barre (le <nav>, pas tout le <header>)
+            const nav = document.querySelector('header > nav[aria-label="Global"]')
+                || document.querySelector('header > nav')
+                || document.querySelector('header');
+
+            const setHeaderH = () => {
+                const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+                document.documentElement.style.setProperty('--header-h', h + 'px');
+            };
+
+            setHeaderH();
+            window.addEventListener('load', setHeaderH, { passive: true });
+            window.addEventListener('resize', setHeaderH, { passive: true });
+
+            // 2) Mobile: fermer le dialog PUIS laisser le scroll natif (smooth via CSS)
             const dlg = document.getElementById('{{ mobile.dialog_id }}');
-            const docEl = document.documentElement;
+            if (!dlg) return;
 
-            function updateHeaderVar() {
-                const h = headerEl ? Math.round(headerEl.getBoundingClientRect().height) : 0;
-                docEl.style.setProperty('--header-h', h + 'px');
-                return h;
-            }
-            function headerH(){ return updateHeaderVar(); }
-
-            updateHeaderVar();
-            window.addEventListener('resize', updateHeaderVar, { passive: true });
-            window.addEventListener('load', updateHeaderVar, { passive: true });
-            document.addEventListener('DOMContentLoaded', updateHeaderVar, { passive: true });
-
-            function smoothScrollToHash(hash) {
-                const target = document.querySelector(hash);
-                if (!target) return;
-
-                // Désactive le fallback :target pendant ce scroll
-                docEl.setAttribute('data-js-scroll', '');
-
-                const h = headerH();
-                // Prend en compte un éventuel scroll-margin-top (ex. classes Tailwind scroll-mt-*)
-                const smt = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-                const EXTRA = 4; // petit correctif anti sous-pixel
-
-                const y = target.getBoundingClientRect().top + window.pageYOffset - h - smt - EXTRA;
-
-                // Scroll précis
-                window.scrollTo({ top: Math.max(0, Math.round(y)), behavior: 'smooth' });
-
-                // Met à jour l'URL sans jump natif
-                history.replaceState(null, '', hash);
-
-                // Réactive le fallback après le scroll
-                setTimeout(() => docEl.removeAttribute('data-js-scroll'), 400);
-            }
-
-            document.addEventListener('click', function(e){
+            dlg.addEventListener('click', function (e) {
                 const a = e.target.closest('a[href^="#"]');
                 if (!a) return;
+
                 const hash = a.getAttribute('href');
                 if (!hash || hash === '#') return;
 
-                // Lien dans le menu mobile : ferme puis scroll
-                if (dlg && dlg.contains(a)) {
-                    e.preventDefault();
-                    const afterClose = () => smoothScrollToHash(hash);
-
-                    if (typeof dlg.close === 'function') {
-                        dlg.addEventListener('close', afterClose, { once: true });
-                        try { dlg.close(); } catch(_) { afterClose(); }
-                    } else {
-                        dlg.removeAttribute('open');
-                        requestAnimationFrame(afterClose);
-                    }
-                    return;
-                }
-
-                // Desktop : scroll direct
                 e.preventDefault();
-                smoothScrollToHash(hash);
+
+                const go = () => {
+                    // Déclenche la navigation native (une seule anim, fluide)
+                    if (history.pushState) {
+                        history.pushState(null, '', hash);
+                        const target = document.querySelector(hash);
+                        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        location.hash = hash;
+                    }
+                };
+
+                if (typeof dlg.close === 'function') {
+                    dlg.addEventListener('close', go, { once: true });
+                    try { dlg.close(); } catch { go(); }
+                } else {
+                    dlg.removeAttribute('open');
+                    requestAnimationFrame(go);
+                }
             }, { passive: false });
         })();
     </script>
+
+
 
 
 

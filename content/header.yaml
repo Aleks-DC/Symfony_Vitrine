@@ -1,8 +1,8 @@
 brand:
-    name: "Your Company"
+    name: "Aleks DC"
     logo:
         src: "https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-        alt: "Your Company"
+        alt: "Aleks DC"
 
 menu:
     - label: "Services"
@@ -18,7 +18,6 @@ menu:
 
 auth:
     login_label: "Log in"
-    login_href: "#login"
-
+    login_href: "#contact"   # (si tu veux que "Log in" amène vers Contact, sinon remets "#")
 mobile:
     dialog_id: "mobile-menu"

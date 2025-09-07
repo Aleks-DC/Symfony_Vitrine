@@ -52,17 +52,22 @@
     {% block extra_head %}{% endblock %}
 
     <style>
-        :root { --header-h: 100px; }      /* valeur par défaut, mise à jour en JS */
+        :root { --header-h: 100px; } /* ajuste si ton header est +/− haut */
         html { scroll-behavior: smooth; }
 
-        /* Fallback : n'appliquer l'offset :target que lorsqu'on N'EST PAS en scroll JS */
-        html:not([data-js-scroll]) section:target::before {
-            content: "";
+        /* Ancre offset : l’élément portant l’ID est “déplacé” virtuellement vers le haut */
+        .scroll-anchor {
+            position: relative;
+            top: calc(-1 * var(--header-h));
             display: block;
-            height: var(--header-h);
-            margin-top: calc(-1 * var(--header-h));
+            height: 0;
+            visibility: hidden;
         }
+
+        /* Bonus : empêche la “marge qui remonte” sans ajouter de pixel visible */
+        section[id] { display: flow-root; } /* crée un BFC, pas de filet blanc */
     </style>
+
 
 </head>
 

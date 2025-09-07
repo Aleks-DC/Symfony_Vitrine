@@ -1,44 +1,47 @@
-{# templates/home.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Aleks DC – Développeur web freelance Symfony{% endblock %}
 {% block meta_description %}Création de sites vitrines et web-apps performantes en Pays de la Loire et partout en France.{% endblock %}
 
 {% block body %}
-    {# 1. Header (component global) #}
     <twig:Header />
 
-    {# 2. Hero (partial) #}
+    {# Hero #}
+    <a id="accueil" class="scroll-anchor" aria-hidden="true"></a>
     {% include 'partials/_hero.html.twig' with { hero: hero } %}
 
-    {# 3. Services / Features (partial) #}
-    <section id="services">
+    {# Services #}
+    <a id="services" class="scroll-anchor" aria-hidden="true"></a>
+    <section>
         {% include 'partials/_services.html.twig' %}
     </section>
 
-    {# 4. Logo cloud (partial) #}
+    {# Logo cloud (pas dans le menu) #}
     {% include 'partials/_logo_cloud.html.twig' %}
 
-    {# 5. Process / Méthode (partial) #}
-    <section id="methode" class="">
+    {# Méthode #}
+    <a id="methode" class="scroll-anchor" aria-hidden="true"></a>
+    <section>
         {% include 'partials/_process.html.twig' %}
     </section>
 
-    {# 6. Stats / KPIs (component – données passées par le contrôleur) #}
+    {# Stats #}
     <twig:Stats :items="stats" />
 
-    {# 7. Pricing / Packages (component – facultatif) #}
-    <twig:Pricing :tiers="pricing" id="tarifs"/>
+    {# Tarifs #}
+    <a id="tarifs" class="scroll-anchor" aria-hidden="true"></a>
+    <twig:Pricing :tiers="pricing" />
 
-    {# 8. Testimonials (component dynamique) #}
-    <twig:Testimonials :quotes="testimonials" id="avis"/>
+    {# Avis #}
+    <a id="avis" class="scroll-anchor" aria-hidden="true"></a>
+    <twig:Testimonials :quotes="testimonials" />
 
-    {# 9. CTA plein écran (partial) #}
+    {# CTA #}
     {% include 'partials/_cta.html.twig' %}
 
-    {# 10. Contact form (component live-ready) #}
-    <twig:ContactForm id="contact"/>
+    {# Contact #}
+    <a id="contact" class="scroll-anchor" aria-hidden="true"></a>
+    <twig:ContactForm />
 
-    {# 11. Footer (component global) #}
     <twig:Footer />
 {% endblock %}
