@@ -11,7 +11,7 @@
     {% include 'partials/_hero.html.twig' with { hero: hero } %}
 
     {# Services #}
-    <a id="services" class="scroll-anchor" aria-hidden="true"></a>
+    <a id="services" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
     <section>
         {% include 'partials/_services.html.twig' %}
     </section>
@@ -20,7 +20,7 @@
     {% include 'partials/_logo_cloud.html.twig' %}
 
     {# Méthode #}
-    <a id="methode" class="scroll-anchor" aria-hidden="true"></a>
+    <a id="methode" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
     <section>
         {% include 'partials/_process.html.twig' %}
     </section>
@@ -29,18 +29,18 @@
     <twig:Stats :items="stats" />
 
     {# Tarifs #}
-    <a id="tarifs" class="scroll-anchor" aria-hidden="true"></a>
+    <a id="tarifs" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
     <twig:Pricing :tiers="pricing" />
 
     {# Avis #}
-    <a id="avis" class="scroll-anchor" aria-hidden="true"></a>
+    <a id="avis" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
     <twig:Testimonials :quotes="testimonials" />
 
     {# CTA #}
     {% include 'partials/_cta.html.twig' %}
 
     {# Contact #}
-    <a id="contact" class="scroll-anchor" aria-hidden="true"></a>
+    <a id="contact" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
     <twig:ContactForm />
 
     <twig:Footer />

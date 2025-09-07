@@ -52,20 +52,9 @@
     {% block extra_head %}{% endblock %}
 
     <style>
-        :root { --header-h: 100px; } /* ajuste si ton header est +/− haut */
+        :root { --header-h: 100px; } /* sera mis à jour en JS */
         html { scroll-behavior: smooth; }
-
-        /* Ancre offset : l’élément portant l’ID est “déplacé” virtuellement vers le haut */
-        .scroll-anchor {
-            position: relative;
-            top: calc(-1 * var(--header-h));
-            display: block;
-            height: 0;
-            visibility: hidden;
-        }
-
-        /* Bonus : empêche la “marge qui remonte” sans ajouter de pixel visible */
-        section[id] { display: flow-root; } /* crée un BFC, pas de filet blanc */
+        section { display: flow-root; } /* évite les marges qui "remontent" */
     </style>
 
 

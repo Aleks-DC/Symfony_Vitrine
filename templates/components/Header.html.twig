@@ -85,7 +85,7 @@
 
     <script>
         (function () {
-            // 1) Mesurer la VRAIE hauteur de la barre (le <nav>, pas tout le <header>)
+            // Mesure du nav (plus fiable que le header entier)
             const nav = document.querySelector('header > nav[aria-label="Global"]')
                 || document.querySelector('header > nav')
                 || document.querySelector('header');
@@ -99,7 +99,7 @@
             window.addEventListener('load', setHeaderH, { passive: true });
             window.addEventListener('resize', setHeaderH, { passive: true });
 
-            // 2) Mobile: fermer le dialog PUIS laisser le scroll natif (smooth via CSS)
+            // Fermer le dialog PUIS scroller (mobile)
             const dlg = document.getElementById('{{ mobile.dialog_id }}');
             if (!dlg) return;
 
@@ -113,7 +113,6 @@
                 e.preventDefault();
 
                 const go = () => {
-                    // Déclenche la navigation native (une seule anim, fluide)
                     if (history.pushState) {
                         history.pushState(null, '', hash);
                         const target = document.querySelector(hash);
@@ -133,6 +132,7 @@
             }, { passive: false });
         })();
     </script>
+
 
 
 
