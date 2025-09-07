@@ -10,13 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(HomepageProvider $provider): Response
+    public function __invoke(HomepageProvider $provider): Response
     {
-        $vm = $provider->getViewModel();   // <-- here
-
-        // always pass selectedProject to avoid 500s in Twig
-        $vm['selectedProject'] = $vm['selectedProject'] ?? null;
-
-        return $this->render('home/index.html.twig', $vm);
+        return $this->render('home/index.html.twig', $provider->getViewModel());
     }
 }

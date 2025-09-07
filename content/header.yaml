@@ -1,0 +1,24 @@
+brand:
+    name: "Your Company"
+    logo:
+        src: "https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+        alt: "Your Company"
+
+menu:
+    - label: "Services"
+      href: "#services"
+    - label: "Méthode"
+      href: "#methode"
+    - label: "Tarifs"
+      href: "#tarifs"
+    - label: "Avis"
+      href: "#avis"
+    - label: "Contact"
+      href: "#contact"
+
+auth:
+    login_label: "Log in"
+    login_href: "#login"
+
+mobile:
+    dialog_id: "mobile-menu"

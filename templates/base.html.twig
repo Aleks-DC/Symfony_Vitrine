@@ -50,6 +50,20 @@
 
     {# --------- Hook pour <head> supplémentaire --------- #}
     {% block extra_head %}{% endblock %}
+
+    <style>
+        :root { --header-h: 100px; }      /* valeur par défaut, mise à jour en JS */
+        html { scroll-behavior: smooth; }
+
+        /* Fallback : n'appliquer l'offset :target que lorsqu'on N'EST PAS en scroll JS */
+        html:not([data-js-scroll]) section:target::before {
+            content: "";
+            display: block;
+            height: var(--header-h);
+            margin-top: calc(-1 * var(--header-h));
+        }
+    </style>
+
 </head>
 
 <body class="antialiased text-gray-900 bg-white">

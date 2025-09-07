@@ -9,31 +9,35 @@
     <twig:Header />
 
     {# 2. Hero (partial) #}
-    {% include 'partials/_hero.html.twig' %}
+    {% include 'partials/_hero.html.twig' with { hero: hero } %}
 
     {# 3. Services / Features (partial) #}
-    {% include 'partials/_services.html.twig' %}
+    <section id="services">
+        {% include 'partials/_services.html.twig' %}
+    </section>
 
     {# 4. Logo cloud (partial) #}
     {% include 'partials/_logo_cloud.html.twig' %}
 
-    {# 5. Process / Méthodo (partial) #}
-    {% include 'partials/_process.html.twig' %}
+    {# 5. Process / Méthode (partial) #}
+    <section id="methode" class="">
+        {% include 'partials/_process.html.twig' %}
+    </section>
 
-    {# 6. Testimonials (component dynamique) #}
-    <twig:Testimonials :quotes="testimonials" />
-
-    {# 7. Stats / KPIs (component – données passées par le contrôleur) #}
+    {# 6. Stats / KPIs (component – données passées par le contrôleur) #}
     <twig:Stats :items="stats" />
 
-    {# 8. Pricing / Packages (component – facultatif) #}
-    <twig:Pricing :tiers="pricing" />
+    {# 7. Pricing / Packages (component – facultatif) #}
+    <twig:Pricing :tiers="pricing" id="tarifs"/>
+
+    {# 8. Testimonials (component dynamique) #}
+    <twig:Testimonials :quotes="testimonials" id="avis"/>
 
     {# 9. CTA plein écran (partial) #}
     {% include 'partials/_cta.html.twig' %}
 
     {# 10. Contact form (component live-ready) #}
-    <twig:ContactForm />
+    <twig:ContactForm id="contact"/>
 
     {# 11. Footer (component global) #}
     <twig:Footer />
