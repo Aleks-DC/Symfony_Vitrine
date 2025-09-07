@@ -1,4 +1,4 @@
-<header class="absolute inset-x-0 top-0 z-50">
+<header class="sticky  inset-x-0 top-0 z-50">
     <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
         <div class="flex lg:flex-1">
             <a href="#" class="-m-1.5 p-1.5">
@@ -21,7 +21,7 @@
 
         <div class="hidden lg:flex lg:gap-x-12">
             {% for item in menu %}
-                <a href="{{ item.href }}" class="text-sm/6 font-semibold text-white">
+                <a href="{{ item.href }}" class="text-sm/6 font-semibold text-white inline-flex items-center border-b-2 border-transparent px-1 pt-1 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white">
                     {{ item.label }}
                 </a>
             {% endfor %}
@@ -84,7 +84,7 @@
 
 <script>
     (function () {
-        // Mesure du nav (plus fiable que le header entier)
+        // Mesure la hauteur réelle du nav pour alimenter --header-h
         const nav = document.querySelector('header > nav[aria-label="Global"]')
             || document.querySelector('header > nav')
             || document.querySelector('header');
@@ -98,7 +98,7 @@
         window.addEventListener('load', setHeaderH, { passive: true });
         window.addEventListener('resize', setHeaderH, { passive: true });
 
-        // Fermer le dialog PUIS scroller (mobile)
+        // Mobile: fermer le dialog PUIS lancer le scroll natif (une seule anim))
         const dlg = document.getElementById('{{ mobile.dialog_id }}');
         if (!dlg) return;
 
