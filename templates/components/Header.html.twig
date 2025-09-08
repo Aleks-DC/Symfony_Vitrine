@@ -1,4 +1,4 @@
-<header class="sticky inset-x-0 top-0 z-50 bg-transparent">
+<header id="site-header" class="sticky top-0 z-50 bg-transparent translate-y-0 transition-transform duration-300 ease-out will-change-transform">
     <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
         <div class="flex lg:flex-1">
             <a href="#" class="-m-1.5 p-1.5">
@@ -131,3 +131,113 @@
         }, { passive: false });
     })();
 </script>
+<script>
+    (function () {
+        const header = document.getElementById('site-header');
+        if (!header) return;
+
+        const nav = header.querySelector('nav[aria-label="Global"]') || header.querySelector('nav') || header;
+        const dlg = document.getElementById('{{ mobile.dialog_id }}');
+
+        /* 1) Hauteur réelle du header -> --header-h (utile pour scroll-margin-top & Hero) */
+        const setHeaderH = () => {
+            const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+            document.documentElement.style.setProperty('--header-h', h + 'px');
+        };
+        setHeaderH();
+        addEventListener('load', setHeaderH, { passive: true });
+        addEventListener('resize', setHeaderH, { passive: true });
+
+        /* 2) Helpers show/hide */
+        const showHeader = () => {
+            header.classList.remove('-translate-y-full');
+            header.classList.add('translate-y-0');
+        };
+        const hideHeader = () => {
+            header.classList.remove('translate-y-0');
+            header.classList.add('-translate-y-full');
+        };
+
+        /* 3) Effet “élevé” (fond/blur) dès qu’on a un peu scrollé */
+        const setRaised = () => {
+            const s = window.scrollY > 4;
+            header.classList.toggle('bg-gray-900/80', s);
+            header.classList.toggle('supports-[backdrop-filter]:bg-gray-900/60', s);
+            header.classList.toggle('backdrop-blur', s);
+            header.classList.toggle('border-b', s);
+            header.classList.toggle('border-white/10', s);
+            header.classList.toggle('shadow-sm', s);
+        };
+
+        /* 4) Logique hide-on-down / show-on-up (avec seuils) */
+        let lastY = window.scrollY, downAcc = 0, upAcc = 0, ticking = false;
+        const DOWN_HIDE = 24;   // px cumulé vers le bas avant de cacher
+        const UP_SHOW   = 12;   // px cumulé vers le haut avant d’afficher
+
+        const onScrollRaf = () => {
+            const y = window.scrollY;
+            const dy = y - lastY;
+            lastY = y;
+
+            setRaised();
+
+            if (Math.abs(dy) >= 2) {
+                if (dy > 0) { // vers le bas
+                    downAcc += dy; upAcc = 0;
+                    if (downAcc > DOWN_HIDE && y > 64) hideHeader();
+                } else {      // vers le haut
+                    upAcc += -dy; downAcc = 0;
+                    if (upAcc > UP_SHOW) showHeader();
+                }
+            }
+            ticking = false;
+        };
+
+        addEventListener('scroll', () => {
+            if (!ticking) { ticking = true; requestAnimationFrame(onScrollRaf); }
+        }, { passive: true });
+
+        /* Toujours visible tout en haut */
+        if (window.scrollY < 8) showHeader();
+        setRaised();
+
+        /* 5) Montrer la navbar quand on clique dans la navbar ou un lien d’ancre (desktop) */
+        header.addEventListener('click', () => showHeader(), { passive: true });
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a[href^="#"]');
+            if (a) showHeader();
+        }, { passive: true });
+
+        /* 6) Mobile: fermer le dialog PUIS scroll (et afficher la navbar) */
+        if (dlg) {
+            dlg.addEventListener('click', function (e) {
+                const a = e.target.closest('a[href^="#"]');
+                if (!a) return;
+
+                const hash = a.getAttribute('href');
+                if (!hash || hash === '#') return;
+
+                e.preventDefault();
+                const go = () => {
+                    showHeader();
+                    if (history.pushState) {
+                        history.pushState(null, '', hash);
+                        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        location.hash = hash;
+                    }
+                };
+                if (typeof dlg.close === 'function') {
+                    dlg.addEventListener('close', go, { once: true });
+                    try { dlg.close(); } catch { go(); }
+                } else {
+                    dlg.removeAttribute('open'); requestAnimationFrame(go);
+                }
+            }, { passive: false });
+        }
+
+        /* 7) Si la hash change (ex: navigation clavier), on montre la navbar */
+        addEventListener('hashchange', showHeader);
+    })();
+</script>
+
