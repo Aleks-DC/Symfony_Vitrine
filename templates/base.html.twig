@@ -52,12 +52,16 @@
     {% block extra_head %}{% endblock %}
 
     <style>
-        :root { --header-h: 100px; } /* sera mis à jour en JS */
+        :root { --header-h: 100px; }   /* mis à jour en JS */
         html { scroll-behavior: smooth; }
-        section { display: flow-root; } /* évite les marges qui "remontent" */
-        /* transition douce d’apparence (optionnelle) */
-        #site-header { transition: transform .3s ease, background-color .3s ease, backdrop-filter .3s ease, box-shadow .3s ease; }
+
+        /* Pour tes ancres de sections (#services, #methode, …) */
+        section[id]{
+            scroll-margin-top: var(--header-h);
+            display: flow-root; /* évite la marge du 1er enfant qui “remonte” */
+        }
     </style>
+
 
 
 </head>

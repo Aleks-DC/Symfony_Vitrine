@@ -1,4 +1,4 @@
-<header id="site-header" class="sticky top-0 z-50 bg-transparent translate-y-0 transition-transform duration-300 ease-out will-change-transform">
+<header id="site-header" class="sticky top-0 z-50 bg-transparent translate-y-0 transition-transform duration-500 md:duration-700 ease-in-out will-change-transform">
     <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
         <div class="flex lg:flex-1">
             <a href="#" class="-m-1.5 p-1.5">
@@ -84,62 +84,14 @@
 
 <script>
     (function () {
-        // Mesure la hauteur réelle du nav pour alimenter --header-h
-        const nav = document.querySelector('header > nav[aria-label="Global"]')
-            || document.querySelector('header > nav')
-            || document.querySelector('header');
-
-        const setHeaderH = () => {
-            const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
-            document.documentElement.style.setProperty('--header-h', h + 'px');
-        };
-
-        setHeaderH();
-        window.addEventListener('load', setHeaderH, { passive: true });
-        window.addEventListener('resize', setHeaderH, { passive: true });
-
-        // Mobile: fermer le dialog PUIS lancer le scroll natif (une seule anim))
-        const dlg = document.getElementById('{{ mobile.dialog_id }}');
-        if (!dlg) return;
-
-        dlg.addEventListener('click', function (e) {
-            const a = e.target.closest('a[href^="#"]');
-            if (!a) return;
-
-            const hash = a.getAttribute('href');
-            if (!hash || hash === '#') return;
-
-            e.preventDefault();
-
-            const go = () => {
-                if (history.pushState) {
-                    history.pushState(null, '', hash);
-                    const target = document.querySelector(hash);
-                    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    location.hash = hash;
-                }
-            };
-
-            if (typeof dlg.close === 'function') {
-                dlg.addEventListener('close', go, { once: true });
-                try { dlg.close(); } catch { go(); }
-            } else {
-                dlg.removeAttribute('open');
-                requestAnimationFrame(go);
-            }
-        }, { passive: false });
-    })();
-</script>
-<script>
-    (function () {
         const header = document.getElementById('site-header');
         if (!header) return;
 
         const nav = header.querySelector('nav[aria-label="Global"]') || header.querySelector('nav') || header;
         const dlg = document.getElementById('{{ mobile.dialog_id }}');
+        const mqDesktop = window.matchMedia('(min-width: 1024px)'); // Tailwind lg
 
-        /* 1) Hauteur réelle du header -> --header-h (utile pour scroll-margin-top & Hero) */
+        /* --header-h */
         const setHeaderH = () => {
             const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
             document.documentElement.style.setProperty('--header-h', h + 'px');
@@ -148,47 +100,65 @@
         addEventListener('load', setHeaderH, { passive: true });
         addEventListener('resize', setHeaderH, { passive: true });
 
-        /* 2) Helpers show/hide */
-        const showHeader = () => {
-            header.classList.remove('-translate-y-full');
-            header.classList.add('translate-y-0');
-        };
-        const hideHeader = () => {
-            header.classList.remove('translate-y-0');
-            header.classList.add('-translate-y-full');
-        };
+        /* helpers */
+        const showHeader = () => { header.classList.remove('-translate-y-full'); header.classList.add('translate-y-0'); };
+        const hideHeader = () => { header.classList.remove('translate-y-0');   header.classList.add('-translate-y-full'); };
 
-        /* 3) Effet “élevé” (fond/blur) dès qu’on a un peu scrollé */
+        /* (facultatif) légère teinte/ombre sans blur */
         const setRaised = () => {
             const s = window.scrollY > 4;
             header.classList.toggle('bg-gray-900/80', s);
-            header.classList.toggle('supports-[backdrop-filter]:bg-gray-900/60', s);
-            header.classList.toggle('backdrop-blur', s);
-            header.classList.toggle('border-b', s);
-            header.classList.toggle('border-white/10', s);
-            header.classList.toggle('shadow-sm', s);
+            header.classList.toggle('border-b',       s);
+            header.classList.toggle('border-white/10',s);
+            header.classList.toggle('shadow-sm',      s);
         };
 
-        /* 4) Logique hide-on-down / show-on-up (avec seuils) */
-        let lastY = window.scrollY, downAcc = 0, upAcc = 0, ticking = false;
-        const DOWN_HIDE = 24;   // px cumulé vers le bas avant de cacher
-        const UP_SHOW   = 12;   // px cumulé vers le haut avant d’afficher
+        /* auto-hide avec hystérésis + lock desktop */
+        let lastY = window.scrollY;
+        let downTravel = 0;
+        let hiddenAtY  = null;
+        let ticking    = false;
+        const MIN_DELTA    = 2;
+        const HIDE_AFTER   = 64;
+        const REVEAL_AFTER = 48;
+
+        let lockVisible = false;          // garde la nav visible pendant le smooth scroll (desktop)
+        let unlockTimer = null;
+        const scheduleUnlock = (delay = 300) => {
+            clearTimeout(unlockTimer);
+            unlockTimer = setTimeout(() => { lockVisible = false; }, delay);
+        };
 
         const onScrollRaf = () => {
-            const y = window.scrollY;
+            const y  = window.scrollY;
             const dy = y - lastY;
             lastY = y;
 
             setRaised();
 
-            if (Math.abs(dy) >= 2) {
-                if (dy > 0) { // vers le bas
-                    downAcc += dy; upAcc = 0;
-                    if (downAcc > DOWN_HIDE && y > 64) hideHeader();
-                } else {      // vers le haut
-                    upAcc += -dy; downAcc = 0;
-                    if (upAcc > UP_SHOW) showHeader();
+            // Tant que lock actif (clic desktop), on garde visible et on relâche après "scroll idle"
+            if (lockVisible) {
+                showHeader();
+                scheduleUnlock(300); // 300ms après le DERNIER événement de scroll
+                ticking = false;
+                return;
+            }
+
+            if (Math.abs(dy) < MIN_DELTA) { ticking = false; return; }
+
+            if (dy > 0) { // on descend
+                downTravel += dy;
+                if (downTravel > HIDE_AFTER && y > 64) {
+                    hideHeader();
+                    hiddenAtY = y;
+                    downTravel = 0;
                 }
+            } else {      // on remonte
+                if (hiddenAtY !== null && (hiddenAtY - y) > REVEAL_AFTER) {
+                    showHeader();
+                    hiddenAtY = null;
+                }
+                if (Math.abs(dy) > MIN_DELTA) downTravel = 0;
             }
             ticking = false;
         };
@@ -197,29 +167,30 @@
             if (!ticking) { ticking = true; requestAnimationFrame(onScrollRaf); }
         }, { passive: true });
 
-        /* Toujours visible tout en haut */
+        // état initial
         if (window.scrollY < 8) showHeader();
         setRaised();
 
-        /* 5) Montrer la navbar quand on clique dans la navbar ou un lien d’ancre (desktop) */
-        header.addEventListener('click', () => showHeader(), { passive: true });
+        /* CLICS SUR LIENS — Desktop: lock visible sans timer fixe */
         document.addEventListener('click', (e) => {
             const a = e.target.closest('a[href^="#"]');
-            if (a) showHeader();
+            if (!a) return;
+
+            if (mqDesktop.matches) {
+                lockVisible = true;    // on garde visible pendant tout le smooth-scroll
+                showHeader();
+                // pas de setTimeout ici : le déverrouillage viendra via scheduleUnlock quand le scroll s'arrête
+            }
         }, { passive: true });
 
-        /* 6) Mobile: fermer le dialog PUIS scroll (et afficher la navbar) */
+        /* Mobile (burger) : fermer, scroller, SANS lock (comportement auto-hide normal) */
         if (dlg) {
             dlg.addEventListener('click', function (e) {
-                const a = e.target.closest('a[href^="#"]');
-                if (!a) return;
-
-                const hash = a.getAttribute('href');
-                if (!hash || hash === '#') return;
+                const a = e.target.closest('a[href^="#"]'); if (!a) return;
+                const hash = a.getAttribute('href');        if (!hash || hash === '#') return;
 
                 e.preventDefault();
                 const go = () => {
-                    showHeader();
                     if (history.pushState) {
                         history.pushState(null, '', hash);
                         document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -227,6 +198,7 @@
                         location.hash = hash;
                     }
                 };
+
                 if (typeof dlg.close === 'function') {
                     dlg.addEventListener('close', go, { once: true });
                     try { dlg.close(); } catch { go(); }
@@ -235,9 +207,9 @@
                 }
             }, { passive: false });
         }
-
-        /* 7) Si la hash change (ex: navigation clavier), on montre la navbar */
-        addEventListener('hashchange', showHeader);
     })();
 </script>
+
+
+
 
