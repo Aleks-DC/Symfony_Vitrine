@@ -113,7 +113,7 @@
             header.classList.toggle('shadow-sm',      s);
         };
 
-        /* auto-hide avec hystérésis + lock desktop */
+        /* auto-hide + hystérésis */
         let lastY = window.scrollY;
         let downTravel = 0;
         let hiddenAtY  = null;
@@ -122,12 +122,11 @@
         const HIDE_AFTER   = 64;
         const REVEAL_AFTER = 48;
 
-        let lockVisible = false;          // garde la nav visible pendant le smooth scroll (desktop)
-        let unlockTimer = null;
-        const scheduleUnlock = (delay = 300) => {
-            clearTimeout(unlockTimer);
-            unlockTimer = setTimeout(() => { lockVisible = false; }, delay);
-        };
+        /* LOCK visible (desktop) tant que la cible n'est pas atteinte */
+        let lockVisible = false;
+        let lockTarget  = null;    // élément de la section visée
+        let lockTargetSMT = 0;     // son scroll-margin-top (pour l'alignement)
+        const NEAR_PX = 2;         // tolérance en px
 
         const onScrollRaf = () => {
             const y  = window.scrollY;
@@ -136,10 +135,21 @@
 
             setRaised();
 
-            // Tant que lock actif (clic desktop), on garde visible et on relâche après "scroll idle"
+            // Si lock actif (clic desktop), on garde visible JUSQU'À ce que la cible soit atteinte
             if (lockVisible) {
                 showHeader();
-                scheduleUnlock(300); // 300ms après le DERNIER événement de scroll
+
+                if (lockTarget) {
+                    const top = lockTarget.getBoundingClientRect().top; // relatif au viewport
+                    // Quand l'élément est aligné (avec son scroll-margin-top), on libère le lock
+                    if (Math.abs(top - lockTargetSMT) <= NEAR_PX) {
+                        lockVisible = false;
+                        lockTarget  = null;
+                        hiddenAtY   = null;
+                        downTravel  = 0;
+                    }
+                }
+                // tant que le lock est actif, on ne laisse PAS l'auto-hide agir
                 ticking = false;
                 return;
             }
@@ -171,19 +181,25 @@
         if (window.scrollY < 8) showHeader();
         setRaised();
 
-        /* CLICS SUR LIENS — Desktop: lock visible sans timer fixe */
+        /* CLICS SUR LIENS — Desktop: lock visible jusqu'à alignement de la cible */
         document.addEventListener('click', (e) => {
             const a = e.target.closest('a[href^="#"]');
             if (!a) return;
 
             if (mqDesktop.matches) {
-                lockVisible = true;    // on garde visible pendant tout le smooth-scroll
+                const hash = a.getAttribute('href');
+                const target = document.querySelector(hash);
+                if (!target) return;
+
+                // On ne preventDefault PAS : on laisse l'ancre native (smooth via CSS)
+                lockVisible   = true;
+                lockTarget    = target;
+                lockTargetSMT = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
                 showHeader();
-                // pas de setTimeout ici : le déverrouillage viendra via scheduleUnlock quand le scroll s'arrête
             }
         }, { passive: true });
 
-        /* Mobile (burger) : fermer, scroller, SANS lock (comportement auto-hide normal) */
+        /* MOBILE (burger) : fermer, scroller, sans lock (auto-hide normal) */
         if (dlg) {
             dlg.addEventListener('click', function (e) {
                 const a = e.target.closest('a[href^="#"]'); if (!a) return;
@@ -209,6 +225,7 @@
         }
     })();
 </script>
+
 
 
 
