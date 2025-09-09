@@ -1,0 +1,38 @@
+# content/logo_cloud.yaml
+title: "Trusted by the world’s most innovative teams"
+
+logos:
+    - alt: "Symfony logo"
+      href: "https://symfony.com/"
+      src_light: "images/logos/Symfony-logo-black.svg"
+      src_dark:  "images/logos/Symfony-logo-white.svg"
+      width: 158
+      height: 48
+
+    - alt: "Tailwind logo"
+      href: "https://tailwindcss.com/"
+      src_light: "images/logos/Tailwind-logo.svg"
+      src_dark:  "images/logos/Tailwind-logo.svg"
+      width: 158
+      height: 48
+
+    - alt: "Infomaniak logo"
+      href: "https://www.infomaniak.com/fr/a-propos"
+      src_light: "images/logos/Infomaniak-logo.svg"
+      src_dark:  "images/logos/Infomaniak-logo.svg"
+      width: 158
+      height: 48
+
+    - alt: "Jelastic Cloud logo"
+      href: "https://www.infomaniak.com/en/hosting/dedicated-and-cloud-servers/jelastic-cloud"
+      src_light: "images/logos/Jelastic-logo.svg"
+      src_dark: "images/logos/Jelastic-logo.svg"
+      width: 158
+      height: 48
+
+    - alt: "Docker logo"
+      href: "https://www.docker.com/"
+      src_light: "images/logos/Docker-mark-blue.svg"
+      src_dark:  "images/logos/Docker-mark-white.svg"
+      width: 158
+      height: 48

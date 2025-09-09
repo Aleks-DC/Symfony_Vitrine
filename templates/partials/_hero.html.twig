@@ -1,7 +1,8 @@
 <div class="relative isolate overflow-hidden -mt-[var(--header-h)] pt-[var(--header-h)]">
     <img
-        src="{{ asset(hero.image|default('images/fallback.jpg')) }}"
-        alt="{{ hero.image_alt|default('') }}"
+        src="{{ asset(hero.image|default('images/clark-tibbs-oqStl2L5oxI-unsplash.jpg')) }}"
+        alt="{{ hero.image_alt|default('image') }}"
+        loading="lazy" decoding="async"
         class="absolute inset-0 -z-10 size-full object-cover filter saturate-0 brightness-30 opacity-110" />
 
     <div class="absolute inset-0 -z-10 bg-gradient-to-tr from-gray-900 to-indigo-400 mix-blend-multiply opacity-70"></div>
