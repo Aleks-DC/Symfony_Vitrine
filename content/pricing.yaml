@@ -1,88 +1,100 @@
 # Données pour templates/components/Pricing.html.twig
 id: tarifs
-headline: Pricing that grows with you
+headline: Offres freelance — sites & web-apps
 subheadline: >-
-    Choose an affordable plan that’s packed with the best features for engaging
-    your audience, creating customer loyalty, and driving sales.
+    Création de sites vitrines et applications web/mobile en Vendée. Développement
+    propre (Symfony/Twig), design soigné, performance et accompagnement durable.
 
 frequency:
-    currency: USD
-    monthly_label: Monthly
-    annually_label: Annually
+    currency: EUR
+    monthly_label: Mensuel
+    annually_label: Annuel
     billed_text:
-        monthly: Billed monthly
-        annually: Billed annually
+        monthly: Facturé mensuellement
+        annually: Facturé annuellement
 
 tiers:
     - key: starter
-      name: Starter
-      description: Everything you need to get started.
+      name: Essentiel
+      description: Parfait pour un site vitrine clair et rapide.
       featured: false
-      price: { monthly: 19, annually: 199 }
-      cta: { label: Buy this plan }
+      price: { monthly: 79, annually: 790 }
+      cta: { label: Réserver un appel }
       perks:
-          - Custom domains
-          - Edge content delivery
-          - Advanced analytics
+          - "Jusqu’à 5 pages"
+          - "Design responsive"
+          - "Formulaire de contact"
+          - "SEO technique de base"
+          - "Hébergement & SSL (option)"
 
-    - key: scale
-      name: Scale
-      description: Added flexibility at scale.
+    - key: pro
+      name: Pro
+      description: Idéal pour une PME ou un pro qui veut convertir.
       featured: true
-      price: { monthly: 99, annually: 999 }
-      cta: { label: Buy this plan }
+      price: { monthly: 149, annually: 1490 }
+      cta: { label: Démarrer ce plan }
       perks:
-          - Custom domains
-          - Edge content delivery
-          - Advanced analytics
-          - Quarterly workshops
-          - Single sign-on (SSO)
-          - Priority phone support
+          - "Jusqu’à 10 pages"
+          - "Blog/Actualités"
+          - "CMS d’édition simple"
+          - "SEO avancé + analytics"
+          - "Sauvegardes quotidiennes"
+          - "Support prioritaire (24h)"
 
     - key: growth
-      name: Growth
-      description: All the extras for your growing team.
+      name: Sur-mesure
+      description: Pour les besoins avancés (web-app, intégrations, PWA).
       featured: false
-      price: { monthly: 49, annually: 499 }
-      cta: { label: Buy this plan }
+      price: { monthly: 299, annually: 2990 }
+      cta: { label: Parler de votre projet }
       perks:
-          - Custom domains
-          - Edge content delivery
-          - Advanced analytics
-          - Quarterly workshops
+          - "Fonctionnalités sur mesure"
+          - "Intégrations API"
+          - "Performance & sécurité renforcées"
+          - "CI/CD & environnement de pré-prod"
+          - "Support prioritaire (12h)"
+          - "Ateliers trimestriels"
 
 comparison:
-    columns_order: [starter, scale, growth]
+    columns_order: [starter, pro, growth]
     groups:
-        - title: Features
+        - title: Livrables
           rows:
-              - label: Edge content delivery
-                values: { starter: yes, scale: yes, growth: yes }
-              - label: Custom domains
-                values: { starter: "1", scale: Unlimited, growth: "3" }
-              - label: Team members
-                values: { starter: "3", scale: Unlimited, growth: "20" }
-              - label: Single sign-on (SSO)
-                values: { starter: no, scale: yes, growth: no }
+              - label: "Pages incluses"
+                values: { starter: "5", pro: "10", growth: "Unlimited" }
+              - label: "Formulaire de contact"
+                values: { starter: yes, pro: yes, growth: yes }
+              - label: "Blog / Actualités"
+                values: { starter: no, pro: yes, growth: yes }
+              - label: "E-commerce (panier + paiement)"
+                values: { starter: "Option", pro: "Option", growth: yes }
+              - label: "Gestion de contenus (CMS)"
+                values: { starter: no, pro: yes, growth: yes }
 
-        - title: Reporting
+        - title: Technique
           rows:
-              - label: Advanced analytics
-                values: { starter: yes, scale: yes, growth: yes }
-              - label: Basic reports
-                values: { starter: no, scale: yes, growth: yes }
-              - label: Professional reports
-                values: { starter: no, scale: yes, growth: no }
-              - label: Custom report builder
-                values: { starter: no, scale: yes, growth: no }
+              - label: "Développement Symfony/Twig"
+                values: { starter: yes, pro: yes, growth: yes }
+              - label: "Responsive design"
+                values: { starter: yes, pro: yes, growth: yes }
+              - label: "SEO technique"
+                values: { starter: "Basic", pro: "Advanced", growth: "Advanced+" }
+              - label: "Performance Lighthouse"
+                values: { starter: "80+", pro: "90+", growth: "95+" }
+              - label: "Hébergement & SSL"
+                values: { starter: "Option", pro: "Inclus", growth: "Inclus" }
+              - label: "Sauvegardes quotidiennes"
+                values: { starter: no, pro: yes, growth: yes }
 
-        - title: Support
+        - title: Accompagnement
           rows:
-              - label: 24/7 online support
-                values: { starter: yes, scale: yes, growth: yes }
-              - label: Quarterly workshops
-                values: { starter: no, scale: yes, growth: yes }
-              - label: Priority phone support
-                values: { starter: no, scale: yes, growth: no }
-              - label: 1:1 onboarding tour
-                values: { starter: no, scale: yes, growth: no }
+              - label: "Maintenance & mises à jour"
+                values: { starter: yes, pro: yes, growth: yes }
+              - label: "Support e-mail"
+                values: { starter: "48h", pro: "24h", growth: "12h" }
+              - label: "Support téléphone"
+                values: { starter: no, pro: yes, growth: yes }
+              - label: "Formation prise en main"
+                values: { starter: "1h", pro: "2h", growth: "4h" }
+              - label: "Ateliers trimestriels"
+                values: { starter: no, pro: no, growth: yes }
