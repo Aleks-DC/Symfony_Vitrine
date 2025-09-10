@@ -1,0 +1,96 @@
+# Données pour components/Pricing.html.twig
+id: tarifs
+headline: Pricing that grows with you
+subheadline: >-
+    Choose an affordable plan that’s packed with the best features for engaging
+    your audience, creating customer loyalty, and driving sales.
+
+frequency:
+    currency: USD
+    monthly_label: Monthly
+    annually_label: Annually
+    billed_text:
+        monthly: Billed monthly
+        annually: Billed annually
+
+tiers:
+    - key: starter
+      name: Starter
+      featured: false
+      price:
+          monthly: 19
+          annually: 199
+      cta:
+          label: Buy this plan
+      perks:
+          - Custom domains
+          - Edge content delivery
+          - Advanced analytics
+
+    - key: scale
+      name: Scale
+      featured: true
+      price:
+          monthly: 99
+          annually: 999
+      cta:
+          label: Buy this plan
+      perks:
+          - Custom domains
+          - Edge content delivery
+          - Advanced analytics
+          - Quarterly workshops
+          - Single sign-on (SSO)
+          - Priority phone support
+
+    - key: growth
+      name: Growth
+      featured: false
+      price:
+          monthly: 49
+          annually: 499
+      cta:
+          label: Buy this plan
+      perks:
+          - Custom domains
+          - Edge content delivery
+          - Advanced analytics
+          - Quarterly workshops
+
+comparison:
+    # IMPORTANT: ces clés doivent exister dans "tiers"
+    columns_order: [starter, scale, growth]
+
+    groups:
+        - title: Features
+          rows:
+              - label: Edge content delivery
+                values: { starter: yes, scale: yes, growth: yes }
+              - label: Custom domains
+                values: { starter: "1", scale: Unlimited, growth: "3" }
+              - label: Team members
+                values: { starter: "3", scale: Unlimited, growth: "20" }
+              - label: Single sign-on (SSO)
+                values: { starter: no, scale: yes, growth: no }
+
+        - title: Reporting
+          rows:
+              - label: Advanced analytics
+                values: { starter: yes, scale: yes, growth: yes }
+              - label: Basic reports
+                values: { starter: no, scale: yes, growth: yes }
+              - label: Professional reports
+                values: { starter: no, scale: yes, growth: no }
+              - label: Custom report builder
+                values: { starter: no, scale: yes, growth: no }
+
+        - title: Support
+          rows:
+              - label: 24/7 online support
+                values: { starter: yes, scale: yes, growth: yes }
+              - label: Quarterly workshops
+                values: { starter: no, scale: yes, growth: yes }
+              - label: Priority phone support
+                values: { starter: no, scale: yes, growth: no }
+              - label: 1:1 onboarding tour
+                values: { starter: no, scale: yes, growth: no }
