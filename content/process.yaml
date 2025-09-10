@@ -1,0 +1,54 @@
+# content/process.yaml
+eyebrow: "Introducing"
+title: "JavaScript for beginners"
+lead: >
+    Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh
+    dui, diam eget aliquam. Quisque id at vitae feugiat egestas ac.
+
+# grand bloc de texte au début (juste sous le lead)
+paragraphs:
+    - "Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor praesent donec est."
+    - "Odio penatibus risus viverra tellus varius sit neque erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim."
+
+# liste à puces avec “check”
+checklist:
+    - title: "Data types."
+      text: "Lorem ipsum dolor sit amet, maiores impedit perferendis suscipit eaque, iste dolor."
+    - title: "Loops."
+      text: "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem."
+    - title: "Events."
+      text: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus."
+
+# sous-titre + paragraphe (juste après la liste)
+section_after_list:
+    title: "From beginner to expert in 3 hours"
+    text: >
+        Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh.
+        Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh.
+
+# blockquote + auteur
+quote:
+    text: >
+        "Vel ultricies morbi odio facilisi ultrices accumsan donec lacus purus. Lectus nibh ullamcorper ac dictum
+        justo in euismod. Risus aenean ut elit massa."
+    author_name: "Maria Hill"
+    author_role: "Marketing Manager"
+    author_avatar: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+
+# paragraphe après le blockquote
+post_quote_paragraph: >
+    Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet
+    vitae sed turpis id. Id dolor praesent donec est.
+
+# figure (image + légende)
+figure:
+    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&w=1310&h=873&q=80&facepad=3"
+    alt: "Course preview"
+    caption: "Faucibus commodo massa rhoncus, volutpat."
+
+# dernier bloc texte
+closing:
+    title: "Everything you need to get up and running"
+    paragraphs:
+        - "Purus morbi dignissim senectus mattis adipiscing. Amet, massa quam varius orci dapibus volutpat cras."
+        - "Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed."
