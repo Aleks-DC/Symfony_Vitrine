@@ -1,4 +1,4 @@
-# Données pour components/Pricing.html.twig
+# Données pour templates/components/Pricing.html.twig
 id: tarifs
 headline: Pricing that grows with you
 subheadline: >-
@@ -16,12 +16,10 @@ frequency:
 tiers:
     - key: starter
       name: Starter
+      description: Everything you need to get started.
       featured: false
-      price:
-          monthly: 19
-          annually: 199
-      cta:
-          label: Buy this plan
+      price: { monthly: 19, annually: 199 }
+      cta: { label: Buy this plan }
       perks:
           - Custom domains
           - Edge content delivery
@@ -29,12 +27,10 @@ tiers:
 
     - key: scale
       name: Scale
+      description: Added flexibility at scale.
       featured: true
-      price:
-          monthly: 99
-          annually: 999
-      cta:
-          label: Buy this plan
+      price: { monthly: 99, annually: 999 }
+      cta: { label: Buy this plan }
       perks:
           - Custom domains
           - Edge content delivery
@@ -45,12 +41,10 @@ tiers:
 
     - key: growth
       name: Growth
+      description: All the extras for your growing team.
       featured: false
-      price:
-          monthly: 49
-          annually: 499
-      cta:
-          label: Buy this plan
+      price: { monthly: 49, annually: 499 }
+      cta: { label: Buy this plan }
       perks:
           - Custom domains
           - Edge content delivery
@@ -58,9 +52,7 @@ tiers:
           - Quarterly workshops
 
 comparison:
-    # IMPORTANT: ces clés doivent exister dans "tiers"
     columns_order: [starter, scale, growth]
-
     groups:
         - title: Features
           rows:

@@ -1,69 +1,28 @@
-{# templates/components/Pricing.html.twig
-   Composant Pricing 100% data-driven, compatible Twig 3.x (pas de continue/matches/reduce)
-#}
-
-{# ——— Icônes (petites macros locales pour éviter la répétition) ——— #}
-{% macro yes(extra='mx-auto size-5 text-indigo-400') %}
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="{{ extra }}">
-        <path d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" fill-rule="evenodd"/>
-    </svg>
-{% endmacro %}
-{% macro no(extra='mx-auto size-5 text-gray-600') %}
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="{{ extra }}">
-        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
-    </svg>
-{% endmacro %}
-{% import _self as icons %}
-
-{# ——— Entrées et defaults ——— #}
-{# Accepte :pricing ou :tiers (pour coller à ton appel actuel) #}
-{% set pricing = pricing is defined ? pricing : (tiers is defined ? tiers : (data|default({}))) %}
-{% set section_id  = id|default(pricing.id|default('tarifs')) %}
-{% set headline    = pricing.headline|default('Pricing that grows with you') %}
-{% set subheadline = pricing.subheadline|default("Choose an affordable plan that’s packed with the best features for engaging your audience, creating customer loyalty, and driving sales.") %}
-
-{# Fréquence/devise #}
-{% set freq           = pricing.frequency|default({}) %}
-{% set currency       = freq.currency|default('USD') %}
-{% set labelMonthly   = freq.monthly_label|default('Monthly') %}
-{% set labelAnnually  = freq.annually_label|default('Annually') %}
-{% set billedMonthly  = (freq.billed_text.monthly|default('Billed monthly')) %}
-{% set billedAnnually = (freq.billed_text.annually|default('Billed annually')) %}
-{% set currencySymbol = currency == 'USD' ? '$' : (currency == 'EUR' ? '€' : '') %}
-
-{# Colonnes/tiers indexés par clé (sans map/reduce/continue) #}
-{% set cols = [] %}
-{% if pricing.comparison.columns_order is defined and pricing.comparison.columns_order is iterable %}
-    {% set cols = pricing.comparison.columns_order %}
-{% elseif pricing.tiers is defined and pricing.tiers is iterable %}
-    {% for tt in pricing.tiers %}{% if tt.key is defined %}{% set cols = cols|merge([tt.key]) %}{% endif %}{% endfor %}
-{% endif %}
-
-{% set tiers_by_key = {} %}
-{% if pricing.tiers is defined and pricing.tiers is iterable %}
-    {% for tt in pricing.tiers %}{% if tt.key is defined %}{% set tiers_by_key = tiers_by_key|merge({ (tt.key): tt }) %}{% endif %}{% endfor %}
-{% endif %}
-
-{% set groups = (pricing.comparison.groups|default([])) %}
-
-<section id="{{ section_id }}">
-    <form class="group/tiers isolate overflow-hidden bg-gray-950">
-        {# —————————————— Entête + switch —————————————— #}
-        <div class="flow-root border-b border-b-white/5 bg-gray-950 pt-24 pb-16 sm:pt-32 lg:pb-0">
+{# templates/components/Pricing.html.twig #}
+<section id="{{ sectionId }}">
+    <form class="group/tiers isolate overflow-hidden bg-gray-900">
+        <div class="flow-root border-b border-b-white/5 bg-gray-800/25 pt-24 pb-16 sm:pt-32 lg:pb-0">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
                 <div class="relative z-10">
-                    <h2 class="mx-auto max-w-4xl text-center text-5xl font-semibold tracking-tight text-balance text-white sm:text-6xl">{{ headline }}</h2>
-                    <p class="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">{{ subheadline }}</p>
+                    <h2 class="mx-auto max-w-4xl text-center text-5xl font-semibold tracking-tight text-balance text-white sm:text-6xl">
+                        {{ headline }}
+                    </h2>
+
+                    {% if subheadline %}
+                        <p class="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
+                            {{ subheadline }}
+                        </p>
+                    {% endif %}
 
                     <div class="mt-16 flex justify-center">
                         <fieldset aria-label="Payment frequency">
                             <div class="grid grid-cols-2 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs/5 font-semibold text-white">
                                 <label class="group relative rounded-full px-2.5 py-1 has-checked:bg-indigo-500">
-                                    <input type="radio" name="frequency" value="monthly" checked class="absolute inset-0 appearance-none rounded-full"/>
+                                    <input type="radio" name="frequency" value="monthly" checked class="absolute inset-0 appearance-none rounded-full" />
                                     <span class="text-white">{{ labelMonthly }}</span>
                                 </label>
                                 <label class="group relative rounded-full px-2.5 py-1 has-checked:bg-indigo-500">
-                                    <input type="radio" name="frequency" value="annually" class="absolute inset-0 appearance-none rounded-full"/>
+                                    <input type="radio" name="frequency" value="annually" class="absolute inset-0 appearance-none rounded-full" />
                                     <span class="text-white">{{ labelAnnually }}</span>
                                 </label>
                             </div>
@@ -71,186 +30,233 @@
                     </div>
                 </div>
 
-                {# —————————————— Cartes tarifs —————————————— #}
-                <div class="relative mx-auto mt-10 grid max-w-md grid-cols-1 gap-y-8 lg:mx-0 lg:-mb-14 lg:max-w-none lg:grid-cols-3">
-                    <svg viewBox="0 0 1208 1024" aria-hidden="true" class="absolute -bottom-48 left-1/2 h-256 -translate-x-1/2 translate-y-1/2 mask-[radial-gradient(closest-side,white,transparent)] lg:-top-48 lg:bottom-auto lg:translate-y-0">
-                        <ellipse cx="604" cy="512" rx="604" ry="512" fill="url(#d25c25d4-6d43-4bf9-b9ac-1842a30a4867)"/>
-                        <defs><radialGradient id="d25c25d4-6d43-4bf9-b9ac-1842a30a4867"><stop stop-color="#7775D6"/><stop offset="1" stop-color="#E935C1"/></radialGradient></defs>
-                    </svg>
-                    <div aria-hidden="true" class="hidden lg:absolute lg:inset-x-px lg:top-4 lg:bottom-0 lg:block lg:rounded-t-2xl lg:bg-gray-800/80 lg:ring-1 lg:ring-white/10"></div>
+                {% if cols|length and tiersByKey|length %}
+                    <div class="relative mx-auto mt-10 grid max-w-md grid-cols-1 gap-y-8 lg:mx-0 lg:-mb-14 lg:max-w-none lg:grid-cols-3">
+                        <svg viewBox="0 0 1208 1024" aria-hidden="true" class="absolute -bottom-48 left-1/2 h-256 -translate-x-1/2 translate-y-1/2 mask-[radial-gradient(closest-side,white,transparent)] lg:-top-48 lg:bottom-auto lg:translate-y-0">
+                            <ellipse cx="604" cy="512" rx="604" ry="512" fill="url(#d25c25d4-6d43-4bf9-b9ac-1842a30a4867)" />
+                            <defs>
+                                <radialGradient id="d25c25d4-6d43-4bf9-b9ac-1842a30a4867">
+                                    <stop stop-color="#7775D6" />
+                                    <stop offset="1" stop-color="#E935C1" />
+                                </radialGradient>
+                            </defs>
+                        </svg>
 
-                    {% for tier in pricing.tiers|default([]) %}
-                        {% set featured = tier.featured|default(false) %}
-                        <div class="group/tier relative rounded-2xl outline-1 -outline-offset-1 outline-white/10 {{ featured ? 'z-10 bg-gray-800' : 'bg-gray-800/80 lg:bg-transparent lg:pb-14 lg:outline-0' }}">
-                            <div class="p-8 lg:pt-12 xl:p-10 xl:pt-14">
-                                <h3 id="tier-{{ 'tier-' ~ tier.key }}" class="text-sm/6 font-semibold text-white">{{ tier.name|default('Tier') }}</h3>
+                        <div aria-hidden="true" class="hidden lg:absolute lg:inset-x-px lg:top-4 lg:bottom-0 lg:block lg:rounded-t-2xl lg:bg-gray-800/80 lg:ring-1 lg:ring-white/10"></div>
 
-                                <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between lg:flex-col lg:items-stretch">
-                                    <div class="mt-2 flex items-center gap-x-4">
-                                        <p class="text-4xl font-semibold tracking-tight text-white group-not-has-[[name=frequency][value=monthly]:checked]/tiers:hidden">{{ currencySymbol }}{{ tier.price.monthly|default(0) }}</p>
-                                        <p class="text-4xl font-semibold tracking-tight text-white group-not-has-[[name=frequency][value=annually]:checked]/tiers:hidden">{{ currencySymbol }}{{ tier.price.annually|default(0) }}</p>
-                                        <div class="text-sm">
-                                            <p class="text-white">{{ currency }}</p>
-                                            <p class="text-gray-400 group-not-has-[[name=frequency][value=monthly]:checked]/tiers:hidden">{{ billedMonthly }}</p>
-                                            <p class="text-gray-400 group-not-has-[[name=frequency][value=annually]:checked]/tiers:hidden">{{ billedAnnually }}</p>
+                        {% for key in cols %}
+                            {% set t = tiersByKey[key] ?? {} %}
+                            {% set featured = t.featured ?? false %}
+
+                            <div {{ featured ? 'data-featured="true"' : '' }}
+                                class="group/tier relative {{ featured ? 'z-10 rounded-2xl bg-gray-800 outline-1 -outline-offset-1 outline-white/10' : 'rounded-2xl bg-gray-800/80 outline-1 -outline-offset-1 outline-white/10 lg:bg-transparent lg:pb-14 lg:outline-0' }}">
+                                <div class="p-8 lg:pt-12 xl:p-10 xl:pt-14">
+                                    <h3 id="tier-{{ key }}" class="text-sm/6 font-semibold text-white">{{ t.name|default(key|capitalize) }}</h3>
+
+                                    <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between lg:flex-col lg:items-stretch">
+                                        <div class="mt-2 flex items-center gap-x-4">
+                                            <p class="text-4xl font-semibold tracking-tight text-white group-not-has-[[name=frequency][value=monthly]:checked]/tiers:hidden">
+                                                {{ currencySymbol }}{{ t.price.monthly|default(0) }}
+                                            </p>
+                                            <p class="text-4xl font-semibold tracking-tight text-white group-not-has-[[name=frequency][value=annually]:checked]/tiers:hidden">
+                                                {{ currencySymbol }}{{ t.price.annually|default(0) }}
+                                            </p>
+                                            <div class="text-sm">
+                                                <p class="text-white">{{ currency }}</p>
+                                                <p class="text-gray-400 group-not-has-[[name=frequency][value=monthly]:checked]/tiers:hidden">{{ billedMonthly }}</p>
+                                                <p class="text-gray-400 group-not-has-[[name=frequency][value=annually]:checked]/tiers:hidden">{{ billedAnnually }}</p>
+                                            </div>
                                         </div>
+
+                                        {% set cta = t.cta ?? {} %}
+                                        <button type="submit" name="tier" value="tier-{{ key }}" aria-describedby="tier-{{ key }}"
+                                                class="w-full rounded-md bg-white/10 px-3 py-2 text-center text-sm/6 font-semibold text-white not-group-data-featured:inset-ring not-group-data-featured:inset-ring-white/5 group-data-featured/tier:bg-indigo-500 hover:bg-white/20 group-data-featured/tier:hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/75 group-data-featured/tier:focus-visible:outline-indigo-500">
+                                            {{ cta.label|default('Buy this plan') }}
+                                        </button>
                                     </div>
 
-                                    <button type="submit" name="tier" value="{{ 'tier-' ~ tier.key }}" aria-describedby="{{ 'tier-tier-' ~ tier.key }}"
-                                            class="w-full rounded-md px-3 py-2 text-center text-sm/6 font-semibold text-white
-                                 not-group-data-featured:inset-ring not-group-data-featured:inset-ring-white/5
-                                 {{ featured ? 'bg-indigo-500 hover:bg-indigo-400 focus-visible:outline-indigo-500' : 'bg-white/10 hover:bg-white/20 focus-visible:outline-white/75' }}">
-                                        {{ tier.cta.label|default('Buy this plan') }}
-                                    </button>
+                                    {% if t.perks is iterable and t.perks|length %}
+                                        <div class="mt-8 flow-root sm:mt-10">
+                                            <ul role="list" class="-my-2 divide-y divide-white/5 border-t border-white/5 text-sm/6 text-white group-data-featured/tier:divide-white/10 group-data-featured/tier:border-white/10 lg:border-t-0">
+                                                {% for perk in t.perks %}
+                                                    <li class="flex gap-x-3 py-2">
+                                                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="h-6 w-5 flex-none text-gray-500 group-data-featured/tier:text-indigo-400">
+                                                            <path d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                                        </svg>
+                                                        {{ perk }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
                                 </div>
-
-                                {% if tier.perks is defined and tier.perks is iterable %}
-                                    <div class="mt-8 flow-root sm:mt-10">
-                                        <ul role="list" class="-my-2 divide-y divide-white/5 border-t border-white/5 text-sm/6 text-white {{ featured ? 'divide-white/10 border-white/10' : '' }} lg:border-t-0">
-                                            {% for perk in tier.perks %}
-                                                <li class="flex gap-x-3 py-2">
-                                                    {{ icons.yes('h-6 w-5 flex-none ' ~ (featured ? 'text-indigo-400' : 'text-gray-500')) }} {{ perk }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                {% endif %}
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
 
-        {# —————————————— Comparatif (mobile + desktop) —————————————— #}
-        <div class="relative bg-gray-950 lg:pt-14">
-            <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+        {% if cols|length and groups|length %}
+            <div class="relative bg-gray-900 lg:pt-14">
+                <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
 
-                {# ——— Mobile ——— #}
-                <section aria-labelledby="mobile-comparison-heading" class="lg:hidden">
-                    <h2 id="mobile-comparison-heading" class="sr-only">Feature comparison</h2>
-                    <div class="mx-auto max-w-2xl space-y-16">
-                        {% for tkey in cols %}
-                            {% set t = tiers_by_key[tkey]|default(null) %}
-                            {% if t %}
+                    {# Mobile comparison #}
+                    <section aria-labelledby="mobile-comparison-heading" class="lg:hidden">
+                        <h2 id="mobile-comparison-heading" class="sr-only">Feature comparison</h2>
+                        <div class="mx-auto max-w-2xl space-y-16">
+                            {% for key in cols %}
+                                {% set t = tiersByKey[key] ?? {} %}
+                                {% set featured = t.featured ?? false %}
+
                                 <div class="border-t border-white/10">
-                                    <div class="-mt-px w-72 border-t-2 {{ t.featured ? 'border-indigo-500' : 'border-transparent' }} pt-10 md:w-80">
-                                        <h3 class="text-sm/6 font-semibold {{ t.featured ? 'text-indigo-400' : 'text-white' }}">{{ t.name }}</h3>
-                                        <p class="mt-1 text-sm/6 text-gray-400">
-                                            {{ t.key == 'starter' ? 'Everything you need to get started.' : (t.key == 'scale' ? 'Added flexibility at scale.' : 'All the extras for your growing team.') }}
-                                        </p>
+                                    <div class="-mt-px w-72 border-t-2 {{ featured ? 'border-indigo-500' : 'border-transparent' }} pt-10 md:w-80">
+                                        <h3 class="text-sm/6 font-semibold {{ featured ? 'text-indigo-400' : 'text-white' }}">{{ t.name|default(key|capitalize) }}</h3>
+                                        {% if t.description is defined and t.description %}
+                                            <p class="mt-1 text-sm/6 text-gray-400">{{ t.description }}</p>
+                                        {% endif %}
                                     </div>
 
                                     <div class="mt-10 space-y-10">
-                                        {% for group in groups %}
+                                        {% for g in groups %}
                                             <div>
-                                                <h4 class="text-sm/6 font-semibold text-white">{{ group.title }}</h4>
+                                                <h4 class="text-sm/6 font-semibold text-white">{{ g.title }}</h4>
                                                 <div class="relative mt-6">
                                                     <div aria-hidden="true" class="absolute inset-y-0 right-0 hidden w-1/2 rounded-lg bg-gray-800/50 sm:block"></div>
-                                                    <div class="relative rounded-lg bg-gray-800/50 ring-1 {{ t.featured ? 'ring-2 ring-indigo-500' : 'ring-white/10' }} sm:rounded-none sm:bg-transparent sm:ring-0">
+                                                    <div class="relative rounded-lg bg-gray-800/50 {{ featured ? 'ring-2 ring-indigo-500' : 'ring-1 ring-white/10' }} sm:rounded-none sm:bg-transparent sm:ring-0">
                                                         <dl class="divide-y divide-white/10 text-sm/6">
-                                                            {% for row in group.rows %}
-                                                                {% set val = row.values[tkey]|default(null) %}
+                                                            {% for r in g.rows %}
+                                                                {% set val = r.values[key] ?? null %}
+                                                                {% set yes = (val is same as(true)) or (val == 'yes') or (val == 'Yes') or (val == 1) %}
+                                                                {% set no  = (val is same as(false)) or (val == 'no')  or (val == 'No')  or (val == 0) %}
                                                                 <div class="flex items-center justify-between px-4 py-3 sm:grid sm:grid-cols-2 sm:px-0">
-                                                                    <dt class="pr-4 text-gray-400">{{ row.label }}</dt>
+                                                                    <dt class="pr-4 text-gray-400">{{ r.label }}</dt>
                                                                     <dd class="flex items-center justify-end sm:justify-center sm:px-4">
-                                                                        {% if val in ['yes', true] %}
-                                                                            {{ icons.yes('mx-auto size-5 text-indigo-400') }}<span class="sr-only">Yes</span>
-                                                                        {% elseif val in ['no', false, null] %}
-                                                                            {{ icons.no('mx-auto size-5 text-gray-600') }}<span class="sr-only">No</span>
+                                                                        {% if yes %}
+                                                                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mx-auto size-5 text-indigo-400">
+                                                                                <path d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                                                            </svg>
+                                                                            <span class="sr-only">Yes</span>
+                                                                        {% elseif no %}
+                                                                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mx-auto size-5 text-gray-600">
+                                                                                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
+                                                                            </svg>
+                                                                            <span class="sr-only">No</span>
                                                                         {% else %}
-                                                                            <span class="text-white">{{ val }}</span>
+                                                                            <span class="{{ featured and (val == 'Unlimited') ? 'font-semibold text-indigo-400' : 'text-white' }}">{{ val }}</span>
                                                                         {% endif %}
                                                                     </dd>
                                                                 </div>
                                                             {% endfor %}
                                                         </dl>
                                                     </div>
-                                                    <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 rounded-lg {{ t.featured ? 'ring-2 ring-indigo-500' : 'ring-1 ring-white/10' }} sm:block"></div>
+                                                    <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 rounded-lg {{ featured ? 'ring-2 ring-indigo-500' : 'ring-1 ring-white/10' }} sm:block"></div>
                                                 </div>
                                             </div>
                                         {% endfor %}
                                     </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </section>
+                            {% endfor %}
+                        </div>
+                    </section>
 
-                {# ——— Desktop ——— #}
-                <section aria-labelledby="comparison-heading" class="hidden lg:block">
-                    <h2 id="comparison-heading" class="sr-only">Feature comparison</h2>
+                    {# Desktop comparison (3 colonnes fixées à l'ordre YAML) #}
+                    {% if cols|length >= 3 %}
+                        {% set a = cols[0] %}{% set b = cols[1] %}{% set c = cols[2] %}
+                        {% set tA = tiersByKey[a] ?? {} %}{% set tB = tiersByKey[b] ?? {} %}{% set tC = tiersByKey[c] ?? {} %}
 
-                    <div class="grid grid-cols-4 gap-x-8 border-t border-white/10 before:block">
-                        {% for tkey in cols %}
-                            {% set t = tiers_by_key[tkey]|default(null) %}
-                            <div aria-hidden="true" class="-mt-px">
-                                <div class="border-t-2 {{ t and t.featured ? 'border-indigo-500' : 'border-transparent' }} pt-10">
-                                    <p class="text-sm/6 font-semibold {{ t and t.featured ? 'text-indigo-400' : 'text-white' }}">{{ t ? t.name : '' }}</p>
-                                    <p class="mt-1 text-sm/6 text-gray-400">
-                                        {{ tkey == 'starter' ? 'Everything you need to get started.' : (tkey == 'scale' ? 'Added flexibility at scale.' : 'All the extras for your growing team.') }}
-                                    </p>
+                        <section aria-labelledby="comparison-heading" class="hidden lg:block">
+                            <h2 id="comparison-heading" class="sr-only">Feature comparison</h2>
+
+                            <div class="grid grid-cols-4 gap-x-8 border-t border-white/10 before:block">
+                                <div aria-hidden="true" class="-mt-px">
+                                    <div class="border-t-2 border-transparent pt-10">
+                                        <p class="text-sm/6 font-semibold text-white">{{ tA.name|default(a|capitalize) }}</p>
+                                        {% if tA.description is defined %}<p class="mt-1 text-sm/6 text-gray-400">{{ tA.description }}</p>{% endif %}
+                                    </div>
+                                </div>
+                                <div aria-hidden="true" class="-mt-px">
+                                    <div class="border-t-2 border-indigo-500 pt-10">
+                                        <p class="text-sm/6 font-semibold text-indigo-400">{{ tB.name|default(b|capitalize) }}</p>
+                                        {% if tB.description is defined %}<p class="mt-1 text-sm/6 text-gray-400">{{ tB.description }}</p>{% endif %}
+                                    </div>
+                                </div>
+                                <div aria-hidden="true" class="-mt-px">
+                                    <div class="border-t-2 border-transparent pt-10">
+                                        <p class="text-sm/6 font-semibold text-white">{{ tC.name|default(c|capitalize) }}</p>
+                                        {% if tC.description is defined %}<p class="mt-1 text-sm/6 text-gray-400">{{ tC.description }}</p>{% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
 
-                    <div class="-mt-6 space-y-16">
-                        {% for group in groups %}
-                            <div>
-                                <h3 class="text-sm/6 font-semibold text-white">{{ group.title }}</h3>
-                                <div class="relative -mx-8 mt-10">
-                                    <div aria-hidden="true" class="absolute inset-x-8 inset-y-0 grid grid-cols-4 gap-x-8 before:block">
-                                        <div class="size-full rounded-lg bg-gray-800/50"></div>
-                                        <div class="size-full rounded-lg bg-gray-800/50"></div>
-                                        <div class="size-full rounded-lg bg-gray-800/50"></div>
-                                    </div>
+                            <div class="-mt-6 space-y-16">
+                                {% for g in groups %}
+                                    <div>
+                                        <h3 class="text-sm/6 font-semibold text-white">{{ g.title }}</h3>
+                                        <div class="relative -mx-8 mt-10">
+                                            <div aria-hidden="true" class="absolute inset-x-8 inset-y-0 grid grid-cols-4 gap-x-8 before:block">
+                                                <div class="size-full rounded-lg bg-gray-800/50"></div>
+                                                <div class="size-full rounded-lg bg-gray-800/50"></div>
+                                                <div class="size-full rounded-lg bg-gray-800/50"></div>
+                                            </div>
 
-                                    <table class="relative w-full border-separate border-spacing-x-8">
-                                        <thead>
-                                        <tr class="text-left">
-                                            <th scope="col"><span class="sr-only">Feature</span></th>
-                                            {% for _ in cols %}<th scope="col"><span class="sr-only">Tier</span></th>{% endfor %}
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for row in group.rows %}
-                                            <tr>
-                                                <th scope="row" class="w-1/4 py-3 pr-4 text-left text-sm/6 font-normal text-white">
-                                                    {{ row.label }}<div class="absolute inset-x-8 mt-3 h-px bg-white/10"></div>
-                                                </th>
-                                                {% for tkey in cols %}
-                                                    {% set val = row.values[tkey]|default(null) %}
-                                                    <td class="relative w-1/4 px-4 py-0 text-center">
-                              <span class="relative size-full py-3">
-                                {% if val in ['yes', true] %}
-                                    {{ icons.yes() }}<span class="sr-only">Yes</span>
-                                {% elseif val in ['no', false, null] %}
-                                    {{ icons.no() }}<span class="sr-only">No</span>
-                                {% else %}
-                                    <span class="text-sm/6 text-white">{{ val }}</span>
-                                {% endif %}
-                              </span>
-                                                    </td>
+                                            <table class="relative w-full border-separate border-spacing-x-8">
+                                                <thead>
+                                                <tr class="text-left">
+                                                    <th scope="col"><span class="sr-only">Feature</span></th>
+                                                    <th scope="col"><span class="sr-only">{{ tA.name|default('Tier A') }} tier</span></th>
+                                                    <th scope="col"><span class="sr-only">{{ tB.name|default('Tier B') }} tier</span></th>
+                                                    <th scope="col"><span class="sr-only">{{ tC.name|default('Tier C') }} tier</span></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for r in g.rows %}
+                                                    <tr>
+                                                        <th scope="row" class="w-1/4 py-3 pr-4 text-left text-sm/6 font-normal text-white">
+                                                            {{ r.label }}
+                                                            <div class="absolute inset-x-8 mt-3 h-px bg-white/10"></div>
+                                                        </th>
+
+                                                        {% for key in [a, b, c] %}
+                                                            {% set val = r.values[key] ?? null %}
+                                                            {% set yes = (val is same as(true)) or (val == 'yes') or (val == 'Yes') or (val == 1) %}
+                                                            {% set no  = (val is same as(false)) or (val == 'no')  or (val == 'No')  or (val == 0) %}
+                                                            <td class="relative w-1/4 px-4 py-0 text-center">
+                                  <span class="relative size-full py-3">
+                                    {% if yes %}
+                                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mx-auto size-5 text-indigo-400">
+                                        <path d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                      </svg>
+                                        <span class="sr-only">Yes</span>
+                                    {% elseif no %}
+                                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mx-auto size-5 text-gray-600">
+                                        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
+                                      </svg>
+                                        <span class="sr-only">No</span>
+                                    {% else %}
+                                        <span class="text-sm/6 {{ key == b and (val == 'Unlimited') ? 'font-semibold text-indigo-400' : 'text-white' }}">{{ val }}</span>
+                                    {% endif %}
+                                  </span>
+                                                            </td>
+                                                        {% endfor %}
+                                                    </tr>
                                                 {% endfor %}
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
+                                                </tbody>
+                                            </table>
 
-                                    <div aria-hidden="true" class="pointer-events-none absolute inset-x-8 inset-y-0 grid grid-cols-4 gap-x-8 before:block">
-                                        {% for tkey in cols %}
-                                            {% set t = tiers_by_key[tkey]|default(null) %}
-                                            <div class="rounded-lg {{ t and t.featured ? 'ring-2 ring-indigo-500' : 'ring-1 ring-white/10' }}"></div>
-                                        {% endfor %}
+                                            <div aria-hidden="true" class="pointer-events-none absolute inset-x-8 inset-y-0 grid grid-cols-4 gap-x-8 before:block">
+                                                <div class="rounded-lg ring-1 ring-white/10"></div>
+                                                <div class="rounded-lg ring-2 ring-indigo-500"></div>
+                                                <div class="rounded-lg ring-1 ring-white/10"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
-                    </div>
-                </section>
-
+                        </section>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </form>
 </section>

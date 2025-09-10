@@ -5,18 +5,16 @@ namespace App\Twig\Components;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('Pricing')]
+#[AsTwigComponent(name: 'Pricing', template: 'components/Pricing.html.twig')]
 final class Pricing
 {
-    /** Props pouvant être passées depuis le template */
-    public array $pricing = []; // recommandé
-    public array $data = [];    // compat
-    public array $tiers = [];   // compat (si on passait juste les tiers)
+    /** Entrée attendue: le tableau issu de pricing.yaml (via :tiers="pricing") */
+    public array $tiers = [];
 
-    /** Valeurs préparées pour Twig (read-only côté template) */
+    // Variables exposées au template (tout est prêt, pas de calcul Twig nécessaire)
     public string $sectionId = 'tarifs';
     public string $headline = 'Pricing that grows with you';
-    public string $subheadline = "Choose an affordable plan that’s packed with the best features for engaging your audience, creating customer loyalty, and driving sales.";
+    public ?string $subheadline = null;
 
     public string $currency = 'USD';
     public string $currencySymbol = '$';
@@ -25,54 +23,63 @@ final class Pricing
     public string $billedMonthly = 'Billed monthly';
     public string $billedAnnually = 'Billed annually';
 
-    /** Données structurées pour l’affichage */
-    public array $tiersPrepared = []; // liste des tiers
-    public array $cols = [];          // ordre des colonnes pour la comparaison
-    public array $tiersByKey = [];    // index tiers[key] => tier
-    public array $groups = [];        // groupes de comparaison
+    /** @var string[] ordre des colonnes (keys des tiers) */
+    public array $cols = [];
+    /** @var array<string,array> map key => tier */
+    public array $tiersByKey = [];
+    /** @var array[] comparaison des features */
+    public array $groups = [];
 
-    public function mount(): void
+    public function mount(?array $tiers = null, ?array $data = null): void
     {
-        // 1) Source unique
-        $src = $this->pricing ?: ($this->data ?: (empty($this->tiers) ? [] : ['tiers' => $this->tiers]));
+        // On accepte :tiers="pricing" (ton appel actuel) ou :data="pricing"
+        $src = $tiers ?? $data ?? [];
 
-        // 2) Defaults simples
-        $this->sectionId   = (string)($src['id'] ?? $this->sectionId);
+        // Section / titres
+        $this->sectionId   = (string)($src['id'] ?? 'tarifs');
         $this->headline    = (string)($src['headline'] ?? $this->headline);
-        $this->subheadline = (string)($src['subheadline'] ?? $this->subheadline);
+        $this->subheadline = isset($src['subheadline']) ? (string)$src['subheadline'] : null;
 
-        $freq = $src['frequency'] ?? [];
-        $this->currency       = (string)($freq['currency'] ?? $this->currency);
-        $this->currencySymbol = $this->currency === 'USD' ? '$' : '';
-        $this->labelMonthly   = (string)($freq['monthly_label'] ?? $this->labelMonthly);
-        $this->labelAnnually  = (string)($freq['annually_label'] ?? $this->labelAnnually);
+        // Fréquence / devise
+        $freq = (array)($src['frequency'] ?? []);
+        $this->currency       = (string)($freq['currency'] ?? 'USD');
+        $this->labelMonthly   = (string)($freq['monthly_label'] ?? 'Monthly');
+        $this->labelAnnually  = (string)($freq['annually_label'] ?? 'Annually');
+        $billed                = (array)($freq['billed_text'] ?? []);
+        $this->billedMonthly  = (string)($billed['monthly'] ?? 'Billed monthly');
+        $this->billedAnnually = (string)($billed['annually'] ?? 'Billed annually');
+        $this->currencySymbol = $this->symbolFor($this->currency);
 
-        $billed = $freq['billed_text'] ?? [];
-        $this->billedMonthly  = (string)($billed['monthly'] ?? $this->billedMonthly);
-        $this->billedAnnually = (string)($billed['annually'] ?? $this->billedAnnually);
-
-        // 3) Tiers + index
-        $tiers = \is_array($src['tiers'] ?? null) ? $src['tiers'] : [];
-        $this->tiersPrepared = $tiers;
-
+        // Tiers + ordre des colonnes
+        $tiers = (array)($src['tiers'] ?? []);
         $this->tiersByKey = [];
         foreach ($tiers as $t) {
-            if (\is_array($t) && isset($t['key'])) {
+            if (is_array($t) && isset($t['key'])) {
                 $this->tiersByKey[(string)$t['key']] = $t;
             }
         }
 
-        // 4) Colonnes de comparaison
-        $comp = \is_array($src['comparison'] ?? null) ? $src['comparison'] : [];
-        $order = $comp['columns_order'] ?? null;
-        if (\is_array($order) && $order) {
-            $this->cols = $order;
+        $order = (array)($src['comparison']['columns_order'] ?? []);
+        if ($order) {
+            $this->cols = array_values(array_filter(
+                $order,
+                fn($k) => is_string($k) && isset($this->tiersByKey[$k])
+            ));
         } else {
-            // fallback: ordre des tiers
-            $this->cols = array_values(array_keys($this->tiersByKey));
+            $this->cols = array_keys($this->tiersByKey);
         }
 
-        // 5) Groupes (tableau ou [])
-        $this->groups = \is_array($comp['groups'] ?? null) ? $comp['groups'] : [];
+        // Groupes de comparaison
+        $this->groups = (array)($src['comparison']['groups'] ?? []);
+    }
+
+    private function symbolFor(string $code): string
+    {
+        $map = [
+            'USD' => '$', 'EUR' => '€', 'GBP' => '£',
+            'CHF' => 'CHF', 'CAD' => '$', 'AUD' => '$',
+            'JPY' => '¥', 'CNY' => '¥',
+        ];
+        return $map[$code] ?? '';
     }
 }
