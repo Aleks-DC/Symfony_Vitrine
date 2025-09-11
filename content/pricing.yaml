@@ -1,4 +1,5 @@
-# Données pour templates/components/Pricing.html.twig
+# content/pricing.yaml
+
 id: tarifs
 headline: Offres freelance — sites & web-apps
 subheadline: >-
