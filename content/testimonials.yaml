@@ -36,24 +36,6 @@ quotes:
           handle: "@lindsaywalton"
           avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Nam nesciunt dolorem dolor asperiores cum. Incidunt molestiae quis deleniti vitae ut in earum delectus iusto."
-      author:
-          name: "Courtney Henry"
-          handle: "@courtneyhenry"
-          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
-
-    - text: "Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti."
-      author:
-          name: "Tom Cook"
-          handle: "@tomcook"
-          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
-
-    - text: "Aliquid dolore praesentium ratione. Cumque ea officia repellendus laboriosam. Vitae quod id explicabo non sunt."
-      author:
-          name: "Whitney Francis"
-          handle: "@whitneyfrancis"
-          avatar: "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
-
     - text: "Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum."
       author:
           name: "Leonard Krasner"
@@ -66,8 +48,3 @@ quotes:
           handle: "@floydmiles"
           avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Temporibus ea molestiae impedit adipisci perspiciatis illo aliquid. Quis ut ratione et voluptatem et. Nostrum explicabo iste unde beatae."
-      author:
-          name: "Emily Selman"
-          handle: "@emilyselman"
-          avatar: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
