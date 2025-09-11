@@ -1,6 +1,6 @@
 <section id="{{ id }}">
     <div class="relative isolate bg-gray-900 pt-24 pb-32 sm:pt-32">
-        {# décors #}
+        {# Décors #}
         <div aria-hidden="true" class="absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2 transform-gpu overflow-hidden opacity-30 blur-3xl">
             <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="ml-[max(50%,38rem)] aspect-1313/771 w-328.25 bg-linear-to-tr from-[#ff80b5] to-[#9089fc]"></div>
         </div>
@@ -9,68 +9,113 @@
         </div>
 
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            {# En-tête #}
             <div class="mx-auto max-w-2xl text-center">
-                {% if eyebrow %}
-                    <h2 class="text-base/7 font-semibold text-indigo-400">{{ eyebrow }}</h2>
-                {% endif %}
-                {% if title %}
-                    <p class="mt-2 text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
-                        {{ title }}
-                    </p>
-                {% endif %}
-                {% if subtitle %}
-                    <p class="mt-6 text-lg/8 text-gray-300">{{ subtitle }}</p>
-                {% endif %}
+                {% if eyebrow %}<h2 class="text-base/7 font-semibold text-indigo-400">{{ eyebrow }}</h2>{% endif %}
+                {% if title %}<p class="mt-2 text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">{{ title }}</p>{% endif %}
+                {% if subtitle %}<p class="mt-6 text-lg/8 text-gray-300">{{ subtitle }}</p>{% endif %}
             </div>
 
+            {# Données pré-calculées #}
             {% set f = featured %}
-            {% set rest = others %}
+            {% set all = others %}
 
-            <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 text-sm/6 text-gray-100 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-cols-3">
+            {# IMPORTANT : on limite strictement aux 10 slots attendus par le layout
+         (3 / 2 / 2 / 3), pour reproduire la maquette à l’identique. #}
+            {% set left_top    = all|slice(0, 3) %}
+            {% set left_bottom = all|slice(3, 2) %}
+            {% set right_top   = all|slice(5, 2) %}
+            {% set right_bot   = all|slice(7, 3) %}
+
+            <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm/6 text-gray-100
+                  sm:mt-20 sm:grid-cols-2
+                  xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4">
+
+                {# FEATURED — au centre, exactement comme l’original #}
                 {% if f %}
-                    <figure class="rounded-2xl bg-gray-800/75 ring-1 ring-white/10 sm:col-span-2">
+                    <figure class="rounded-2xl bg-gray-800/75 ring-1 ring-white/10 sm:col-span-2 xl:col-start-2 xl:row-end-1">
                         <blockquote class="p-6 text-lg font-semibold tracking-tight text-white sm:p-12 sm:text-xl/8">
                             <p>“{{ f.text }}”</p>
                         </blockquote>
                         <figcaption class="flex flex-wrap items-center gap-x-4 gap-y-4 border-t border-white/10 px-6 py-4 sm:flex-nowrap">
-                            {% if f.author.avatar %}
-                                <img src="{{ f.author.avatar }}" alt="" class="size-10 flex-none rounded-full bg-gray-700" />
-                            {% endif %}
+                            {% if f.author.avatar %}<img src="{{ f.author.avatar }}" alt="" class="size-10 flex-none rounded-full bg-gray-700" />{% endif %}
                             <div class="flex-auto min-w-0">
                                 <div class="font-semibold text-white truncate">{{ f.author.name }}</div>
-                                {% if f.author.handle %}
-                                    <div class="text-gray-400 truncate">{{ f.author.handle }}</div>
-                                {% endif %}
+                                {% if f.author.handle %}<div class="text-gray-400 truncate">{{ f.author.handle }}</div>{% endif %}
                             </div>
-                            {% if f.logo %}
-                                <img src="{{ f.logo }}" alt="" class="h-10 w-auto flex-none" />
-                            {% endif %}
+                            {% if f.logo %}<img src="{{ f.logo }}" alt="" class="h-10 w-auto flex-none" />{% endif %}
                         </figcaption>
                     </figure>
                 {% endif %}
 
-                {% for q in rest %}
-                    <figure class="rounded-2xl bg-gray-800/75 p-6 ring-1 ring-white/10">
-                        <blockquote class="text-white">
-                            <p>“{{ q.text }}”</p>
-                        </blockquote>
-                        <figcaption class="mt-6 flex items-center gap-x-4">
-                            {% if q.author.avatar %}
-                                <img src="{{ q.author.avatar }}" alt="" class="size-10 rounded-full bg-gray-700" />
-                            {% endif %}
-                            <div class="min-w-0">
-                                <div class="font-semibold text-white truncate">{{ q.author.name }}</div>
-                                {% if q.author.handle %}
-                                    <div class="text-gray-400 truncate">{{ q.author.handle }}</div>
-                                {% endif %}
-                            </div>
-                        </figcaption>
-                    </figure>
-                {% else %}
-                    {% if not f %}
-                        <div class="col-span-full text-center text-gray-300">No testimonials yet.</div>
-                    {% endif %}
-                {% endfor %}
+                {# COLONNE GAUCHE (3 en haut, 2 en bas) #}
+                <div class="space-y-8 xl:contents xl:space-y-0">
+                    <div class="space-y-8 xl:row-span-2">
+                        {% for q in left_top %}
+                            <figure class="rounded-2xl bg-gray-800/75 p-6 ring-1 ring-white/10">
+                                <blockquote class="text-white"><p>“{{ q.text }}”</p></blockquote>
+                                <figcaption class="mt-6 flex items-center gap-x-4">
+                                    {% if q.author.avatar %}<img src="{{ q.author.avatar }}" alt="" class="size-10 rounded-full bg-gray-700" />{% endif %}
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-white truncate">{{ q.author.name }}</div>
+                                        {% if q.author.handle %}<div class="text-gray-400 truncate">{{ q.author.handle }}</div>{% endif %}
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                    <div class="space-y-8 xl:row-start-1">
+                        {% for q in left_bottom %}
+                            <figure class="rounded-2xl bg-gray-800/75 p-6 ring-1 ring-white/10">
+                                <blockquote class="text-white"><p>“{{ q.text }}”</p></blockquote>
+                                <figcaption class="mt-6 flex items-center gap-x-4">
+                                    {% if q.author.avatar %}<img src="{{ q.author.avatar }}" alt="" class="size-10 rounded-full bg-gray-700" />{% endif %}
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-white truncate">{{ q.author.name }}</div>
+                                        {% if q.author.handle %}<div class="text-gray-400 truncate">{{ q.author.handle }}</div>{% endif %}
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# COLONNE DROITE (2 en haut, 3 en bas) #}
+                <div class="space-y-8 xl:contents xl:space-y-0">
+                    <div class="space-y-8 xl:row-start-1">
+                        {% for q in right_top %}
+                            <figure class="rounded-2xl bg-gray-800/75 p-6 ring-1 ring-white/10">
+                                <blockquote class="text-white"><p>“{{ q.text }}”</p></blockquote>
+                                <figcaption class="mt-6 flex items-center gap-x-4">
+                                    {% if q.author.avatar %}<img src="{{ q.author.avatar }}" alt="" class="size-10 rounded-full bg-gray-700" />{% endif %}
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-white truncate">{{ q.author.name }}</div>
+                                        {% if q.author.handle %}<div class="text-gray-400 truncate">{{ q.author.handle }}</div>{% endif %}
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                    <div class="space-y-8 xl:row-span-2">
+                        {% for q in right_bot %}
+                            <figure class="rounded-2xl bg-gray-800/75 p-6 ring-1 ring-white/10">
+                                <blockquote class="text-white"><p>“{{ q.text }}”</p></blockquote>
+                                <figcaption class="mt-6 flex items-center gap-x-4">
+                                    {% if q.author.avatar %}<img src="{{ q.author.avatar }}" alt="" class="size-10 rounded-full bg-gray-700" />{% endif %}
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-white truncate">{{ q.author.name }}</div>
+                                        {% if q.author.handle %}<div class="text-gray-400 truncate">{{ q.author.handle }}</div>{% endif %}
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Fallback si vraiment aucun avis #}
+                {% if (not f) and (all is empty) %}
+                    <div class="col-span-full text-center text-gray-300">No testimonials yet.</div>
+                {% endif %}
             </div>
         </div>
     </div>

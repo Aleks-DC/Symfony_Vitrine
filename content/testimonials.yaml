@@ -9,7 +9,6 @@ quotes:
           handle: "@brennagoyette"
           avatar: "https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
       logo:
-          light: "https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-900.svg"
           dark:  "https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-100.svg"
       featured: true
 
