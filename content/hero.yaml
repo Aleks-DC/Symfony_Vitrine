@@ -1,16 +1,22 @@
 # content/hero.yaml
 
 image: "images/fotis-fotopoulos-6sAl6aQ4OWI-unsplash.jpg"
-image_alt: "Background image"
+image_alt: "Écran de code moderne en arrière-plan"
+
 badge:
-    text: "Announcing our next round of funding."
-    href: "#"
-    label: "Read more"
-title: "Data to enrich your online business"
-subtitle: "Anim aute id magna aliqua ad ad non deserunt sunt..."
+    text: "Fiabilité locale, expertise digitale."
+    href: "#services"
+    label: "Mes services"
+
+title: "Développeur Backend Freelance"
+subtitle: |
+    Basé aux Sables d’Olonne, spécialisé dans la création de sites web et d’applications fiables, performants et adaptés à vos besoins.
+
+
 primary_cta:
-    label: "Get started"
-    href: "#"
+    label: "Découvrir mes réalisations"
+    href: "#portfolio"
+
 secondary_cta:
-    label: "Learn more"
-    href: "#"
+    label: "Me contacter"
+    href: "#contact"

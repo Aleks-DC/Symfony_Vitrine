@@ -1,50 +1,50 @@
 id: avis
 eyebrow: "Ils nous font confiance"
 title: "Des retours clients concrets"
-subtitle:
+subtitle: "Quelques témoignages de clients satisfaits, qui reflètent mon implication et la qualité de mon travail."
+
 quotes:
-    - text: "Service carré du début à la fin, on s’est sentis accompagnés."
+    - text: "Service carré du début à la fin, on s’est sentis accompagnés et rassurés."
       author:
           name: "Brenna Goyette"
           handle: "@brennagoyette"
           avatar: "https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
       logo:
-          dark:  "https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-100.svg"
+          dark: "https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-100.svg"
       featured: true
 
-    - text: "Délais respectés et code propre. Rien à redire."
+    - text: "Délais respectés, code propre et communication claire. Rien à redire."
       author:
           name: "Leslie Alexander"
           handle: "@lesliealexander"
           avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Quia dolorem qui et. Atque quo aliquid sit eos officia. Dolores similique laboriosam quaerat cupiditate."
+    - text: "Un vrai sens du détail et une grande réactivité. Le projet a été mené sans accroc."
       author:
           name: "Michael Foster"
           handle: "@michaelfoster"
           avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Consequatur ut atque. Itaque nostrum molestiae id veniam eos cumque. Ut quia eum fugit laborum autem inventore ut voluptate."
+    - text: "Professionnel et pédagogue, Aleks a su expliquer chaque étape du développement."
       author:
           name: "Dries Vincent"
           handle: "@driesvincent"
           avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis."
+    - text: "Un accompagnement sérieux et une solution technique parfaitement adaptée à nos besoins."
       author:
           name: "Lindsay Walton"
           handle: "@lindsaywalton"
           avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum."
+    - text: "Très impliqué et disponible, il a su livrer un site robuste et évolutif."
       author:
           name: "Leonard Krasner"
           handle: "@leonardkrasner"
           avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
 
-    - text: "Architecto libero natus est. Est quam debitis officia enim atque et ut non. Sunt reiciendis quasi eaque. Itaque error ut et."
+    - text: "Une collaboration fluide et efficace, avec un résultat à la hauteur de nos attentes."
       author:
           name: "Floyd Miles"
           handle: "@floydmiles"
           avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=256&h=256&q=80&auto=format&fit=facearea&facepad=2"
-

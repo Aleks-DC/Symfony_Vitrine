@@ -1,10 +1,11 @@
 # content/pricing.yaml
 
 id: tarifs
-headline: Offres freelance — sites & web-apps
+headline: Une offre qui évolue avec vous
 subheadline: >-
-    Création de sites vitrines et applications web/mobile en Vendée. Développement
-    propre (Symfony/Twig), design soigné, performance et accompagnement durable.
+    Choisissez une formule abordable, pensée pour vous offrir les meilleures
+        fonctionnalités : attirer de nouveaux clients, fidéliser votre audience
+        et booster vos ventes.
 
 frequency:
     currency: EUR

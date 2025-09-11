@@ -91,7 +91,7 @@
                 <img
                     src="{{ process.figure.src|default('https://images.unsplash.com/photo-1500648767791-00dcc994a43e') }}"
                     alt="{{ process.figure.alt|default('Figure') }}"
-                    class="aspect-video rounded-xl bg-gray-50 object-cover dark:bg-gray-800" />
+                    class="aspect-video rounded-xl bg-gray-50 object-cover [object-position:50%_22%] dark:bg-gray-800" />
                 {% if process.figure.caption is defined %}
                     <figcaption class="mt-4 flex gap-x-2 text-sm/6 text-gray-500 dark:text-gray-400">
                         <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mt-0.5 size-5 flex-none text-gray-300 dark:text-gray-600">
