@@ -88,8 +88,8 @@ final class ContactController extends AbstractController
 
         // 7) Envoi de l'email
         $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@votredomaine.tld', 'Côte de Lumière Technologies'))
-            ->to(new Address('vous@votredomaine.tld', 'Contact site'))
+            ->from(new Address('no-reply@aleks-dc.com', 'Aleks_DC'))
+            ->to(new Address('no-reply@aleks-dc.com', 'Contact site'))
             ->replyTo(new Address($dto->email, $dto->first_name . ' ' . $dto->last_name))
             ->subject('Nouveau message de contact')
             ->htmlTemplate('emails/contact.html.twig')
