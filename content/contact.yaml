@@ -1,0 +1,34 @@
+# content/contact.yaml
+
+id: contact
+
+image:
+    src: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&crop=focalpoint&fp-x=.4&w=2560&h=3413&q=80"
+    alt: "Serveurs et câblage réseau dans une baie"
+
+title: "Travaillons ensemble"
+subtitle: "Expliquez-moi votre besoin : je vous réponds rapidement avec une première estimation."
+
+form:
+    action: "#"        # Remplacera facilement par une route type {{ path('contact_submit') }}
+    method: "POST"
+    button_label: "Envoyer le message"
+
+    labels:
+        first_name: "Prénom"
+        last_name: "Nom"
+        email: "Email"
+        company: "Société"
+        phone: "Téléphone"
+        message: "Comment puis-je vous aider ?"
+        budget: "Budget estimé"
+
+    help:
+        phone: "Facultatif"
+        message: "500 caractères max"
+
+    budget_options:
+        - { id: "under-25k", value: "under_25k", label: "Moins de 25 000 €", checked: true }
+        - { id: "25k-50k",   value: "25k-50k",   label: "25 000 – 50 000 €" }
+        - { id: "50k-100k",  value: "50k-100k",  label: "50 000 – 100 000 €" }
+        - { id: "over-100k", value: "over_100k", label: "100 000 € +" }
