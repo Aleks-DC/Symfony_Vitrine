@@ -50,7 +50,7 @@
     {# Mobile dialog #}
     <el-dialog>
         <dialog id="{{ mobile.dialog_id }}" class="backdrop:bg-transparent lg:hidden"
-                role="alertdialog" aria-modal="true" aria-labelledby="mobile-menu-title">>
+                role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
             <div tabindex="0" class="fixed inset-0 focus:outline-none">
                 {# Backdrop animé #}
                 <div data-slideover-target="overlay" data-action="click->slideover#close"
@@ -62,6 +62,10 @@
                     class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-950 p-6
                sm:max-w-sm sm:ring-1 sm:ring-gray-100/10
                transform translate-x-full transition-transform duration-500 md:duration-700 ease-in-out will-change-transform">
+
+                    {# Titre accessible uniquement aux lecteurs d’écran #}
+                    <h2 id="mobile-menu-title" class="sr-only">Menu principal</h2>
+
                     <div class="flex items-center justify-between">
                         <a href="/" class="-m-1.5 p-1.5" aria-label="{{ brand.name }}">
                             <span class="sr-only">{{ brand.name }}</span>

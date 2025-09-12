@@ -43,14 +43,11 @@ export default class extends Controller {
     open(e) {
         e?.preventDefault();
         if (!this.dialog.open) this.dialog.showModal(); // animateIn via observer
-        if (!this.dialog.open) this.dialog.showModal();
         this.triggerTarget?.setAttribute("aria-expanded", "true");
     }
 
     async close(e) {
         e?.preventDefault();
-        await this.closeAnimated();
-        if (this.dialog.open) this.dialog.close();
         await this.closeAnimated();
         if (this.dialog.open) this.dialog.close();
         this.triggerTarget?.setAttribute("aria-expanded", "false");
