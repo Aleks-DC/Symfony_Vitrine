@@ -23,6 +23,8 @@ export default class extends Controller {
         });
         this.mo.observe(this.dialog, { attributes: true });
 
+        this.triggerTarget?.setAttribute("aria-expanded", this.dialog.open ? "true" : "false");
+
         // Esc => anime avant close
         this.onCancel = (e) => { e.preventDefault(); this.closeAnimated(); };
         this.dialog.addEventListener("cancel", this.onCancel);
@@ -41,12 +43,17 @@ export default class extends Controller {
     open(e) {
         e?.preventDefault();
         if (!this.dialog.open) this.dialog.showModal(); // animateIn via observer
+        if (!this.dialog.open) this.dialog.showModal();
+        this.triggerTarget?.setAttribute("aria-expanded", "true");
     }
 
     async close(e) {
         e?.preventDefault();
         await this.closeAnimated();
         if (this.dialog.open) this.dialog.close();
+        await this.closeAnimated();
+        if (this.dialog.open) this.dialog.close();
+        this.triggerTarget?.setAttribute("aria-expanded", "false");
     }
 
     // Animations ================================================================
@@ -57,14 +64,17 @@ export default class extends Controller {
         this.overlayTarget.classList.add("opacity-100");
         this.panelTarget.classList.remove("translate-x-full");
         this.panelTarget.classList.add("translate-x-0");
+        this.overlayTarget.classList.remove("pointer-events-none");
     }
 
     async closeAnimated() {
         if (!this.panelTarget || !this.overlayTarget) return;
         this.overlayTarget.classList.remove("opacity-100");
         this.overlayTarget.classList.add("opacity-0");
+        this.overlayTarget.classList.add("pointer-events-none");
         this.panelTarget.classList.remove("translate-x-0");
         this.panelTarget.classList.add("translate-x-full");
+        this.triggerTarget?.setAttribute("aria-expanded", "false");
 
         await new Promise((resolve) => {
             const onEnd = (ev) => {
