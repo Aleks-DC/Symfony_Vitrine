@@ -1,0 +1,7 @@
+<h2>Nouveau message de contact</h2>
+<p><strong>De :</strong> {{ data.first_name }} {{ data.last_name }} — {{ data.email }}</p>
+<p><strong>Société :</strong> {{ data.company ?: '—' }}</p>
+<p><strong>Téléphone :</strong> {{ data.phone ?: '—' }}</p>
+<p><strong>Budget :</strong> {{ data.budget }}</p>
+<hr>
+<p style="white-space:pre-wrap">{{ data.message }}</p>

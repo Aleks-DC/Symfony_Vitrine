@@ -20,52 +20,93 @@
                         <p class="mt-2 text-lg/8 text-gray-600 dark:text-gray-400">{{ subtitle }}</p>
                     {% endif %}
 
-                    <form action="{{ action }}" method="{{ method }}" class="mt-16">
-                        {# Si tu ajoutes CSRF côté contrôleur :
-            <input type="hidden" name="_token" value="{{ csrf_token('contact_form') }}">
-                        #}
+                    {# Message succès (optionnel) #}
+                    {% if contactSuccess ?? false %}
+                        <p class="mt-6 rounded-md bg-green-50 px-4 py-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                            Merci ! Votre message a bien été envoyé.
+                        </p>
+                    {% endif %}
+
+                    <form action="{{ action }}" method="{{ method }}" class="mt-16" novalidate>
+                        {# CSRF #}
+                        <input type="hidden" name="_token" value="{{ csrf_token('contact_form') }}">
+
+                        {# Honeypot (anti-bot) #}
+                        <div class="sr-only" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input id="website" type="text" name="website" tabindex="-1" autocomplete="off" />
+                        </div>
 
                         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                            {# First name #}
                             <div>
                                 <label for="first-name" class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
                                     {{ labelFirstName }}
                                 </label>
                                 <div class="mt-2.5">
                                     <input id="first-name" type="text" name="first_name" autocomplete="given-name" required
+                                           value="{{ values.first_name|default('') }}"
+                                           aria-invalid="{{ errors.first_name is defined ? 'true' : 'false' }}"
+                                           aria-describedby="{{ errors.first_name is defined ? 'first-name-error' : null }}"
                                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                                    {% if errors.first_name is defined %}
+                                        <p id="first-name-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.first_name }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Last name #}
                             <div>
                                 <label for="last-name" class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
                                     {{ labelLastName }}
                                 </label>
                                 <div class="mt-2.5">
                                     <input id="last-name" type="text" name="last_name" autocomplete="family-name" required
+                                           value="{{ values.last_name|default('') }}"
+                                           aria-invalid="{{ errors.last_name is defined ? 'true' : 'false' }}"
+                                           aria-describedby="{{ errors.last_name is defined ? 'last-name-error' : null }}"
                                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                                    {% if errors.last_name is defined %}
+                                        <p id="last-name-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.last_name }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Email #}
                             <div class="sm:col-span-2">
                                 <label for="email" class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
                                     {{ labelEmail }}
                                 </label>
                                 <div class="mt-2.5">
                                     <input id="email" type="email" name="email" autocomplete="email" required
+                                           value="{{ values.email|default('') }}"
+                                           aria-invalid="{{ errors.email is defined ? 'true' : 'false' }}"
+                                           aria-describedby="{{ errors.email is defined ? 'email-error' : null }}"
                                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                                    {% if errors.email is defined %}
+                                        <p id="email-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.email }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Company #}
                             <div class="sm:col-span-2">
                                 <label for="company" class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
                                     {{ labelCompany }}
                                 </label>
                                 <div class="mt-2.5">
                                     <input id="company" type="text" name="company" autocomplete="organization"
+                                           value="{{ values.company|default('') }}"
+                                           aria-invalid="{{ errors.company is defined ? 'true' : 'false' }}"
+                                           aria-describedby="{{ errors.company is defined ? 'company-error' : null }}"
                                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                                    {% if errors.company is defined %}
+                                        <p id="company-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.company }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Phone #}
                             <div class="sm:col-span-2">
                                 <div class="flex justify-between text-sm/6">
                                     <label for="phone" class="block font-semibold text-gray-900 dark:text-white">
@@ -77,11 +118,17 @@
                                 </div>
                                 <div class="mt-2.5">
                                     <input id="phone" type="tel" name="phone" autocomplete="tel" inputmode="tel"
-                                           {% if helpPhone %}aria-describedby="phone-description"{% endif %}
+                                           value="{{ values.phone|default('') }}"
+                                           aria-invalid="{{ errors.phone is defined ? 'true' : 'false' }}"
+                                           aria-describedby="{% set ds = [] %}{% if helpPhone %}{% set ds = ds|merge(['phone-description']) %}{% endif %}{% if errors.phone is defined %}{% set ds = ds|merge(['phone-error']) %}{% endif %}{{ ds ? ds|join(' ') : null }}"
                                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                                    {% if errors.phone is defined %}
+                                        <p id="phone-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.phone }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Message #}
                             <div class="sm:col-span-2">
                                 <div class="flex justify-between text-sm/6">
                                     <label for="message" class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
@@ -93,11 +140,16 @@
                                 </div>
                                 <div class="mt-2.5">
                   <textarea id="message" name="message" rows="4" maxlength="500" required
-                            {% if helpMessage %}aria-describedby="message-description"{% endif %}
-                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"></textarea>
+                            aria-invalid="{{ errors.message is defined ? 'true' : 'false' }}"
+                            aria-describedby="{% set ds = [] %}{% if helpMessage %}{% set ds = ds|merge(['message-description']) %}{% endif %}{% if errors.message is defined %}{% set ds = ds|merge(['message-error']) %}{% endif %}{{ ds ? ds|join(' ') : null }}"
+                            class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500">{{ values.message|default('') }}</textarea>
+                                    {% if errors.message is defined %}
+                                        <p id="message-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.message }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
 
+                            {# Budget #}
                             <fieldset class="sm:col-span-2">
                                 <legend class="block text-sm/6 font-semibold text-gray-900 dark:text-white">
                                     {{ labelBudget }}
@@ -112,11 +164,19 @@
                                                 type="radio"
                                                 name="budget"
                                                 value="{{ opt.value }}"
-                                                {% if opt.checked %}checked{% endif %}
+                                                {% if values.budget is defined %}
+                                                    {% if values.budget == opt.value %}checked{% endif %}
+                                                {% else %}
+                                                    {% if opt.checked %}checked{% endif %}
+                                                {% endif %}
                                                 class="relative mt-1 size-4 appearance-none rounded-full border border-gray-300 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-gray-600 dark:before:bg-white dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/10 dark:disabled:bg-gray-800/50 dark:disabled:before:bg-gray-600 forced-colors:appearance-auto forced-colors:before:hidden" />
                                             <label for="{{ rid }}">{{ opt.label }}</label>
                                         </div>
                                     {% endfor %}
+
+                                    {% if errors.budget is defined %}
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.budget }}</p>
+                                    {% endif %}
                                 </div>
                             </fieldset>
                         </div>
@@ -128,7 +188,6 @@
                             </button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

@@ -41,7 +41,11 @@
 
     {# Contact #}
     <a id="contact" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <twig:ContactForm :data="contact" />
+    <twig:ContactForm :data="contact"
+        action="{{ path('contact_submit') }}"
+        :values="contactValues"
+        :errors="contactErrors"
+        :contactSuccess="contactSuccess" />
 
     <twig:Footer />
 {% endblock %}

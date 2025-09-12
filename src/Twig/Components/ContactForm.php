@@ -40,6 +40,15 @@ final class ContactForm
     /** @var array<int,array{ id:string, value:string, label:string, checked?:bool }> */
     public array $budgetOptions = [];
 
+    /** Pré-remplissage du form (POST précédent) */
+    public array $values = [];
+
+    /** Erreurs par champ (POST précédent) */
+    public array $errors = [];
+
+    /** Flag succès pour afficher l’alerte verte */
+    public bool $contactSuccess = false;
+
     public function mount(?array $data = null, ?array $form = null): void
     {
         // On accepte :data="contact" OU :form="contact" (même souplesse que Pricing)
