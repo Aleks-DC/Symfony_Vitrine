@@ -28,8 +28,25 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
 
-            - name: Install PHP deps (no dev)
-              run: composer install --no-dev --prefer-dist --no-progress --no-interaction
+            -   name: Install PHP deps (no dev, no scripts)
+                run: composer install --no-dev --prefer-dist --no-progress --no-interaction --no-scripts
+
+            -   name: Create minimal .env for CI
+                run: |
+                    cat > .env << 'EOF'
+                    APP_ENV=prod
+                    APP_DEBUG=0
+                    APP_SECRET=ci_dummy_secret
+                    # DB inutile pour l’export statique ; si une page touche la DB par erreur, ça évitera un autre crash
+                    DATABASE_URL=sqlite:///%kernel.project_dir%/var/ci.db
+                    EOF
+
+            -   name: Install JS deps
+                run: npm ci
+
+            -   name: Build assets (Encore)
+                run: npm run build
+
 
             - name: Install JS deps
               run: npm ci
