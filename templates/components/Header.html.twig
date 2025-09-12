@@ -1,6 +1,7 @@
 <header id="site-header"
-        data-controller="navbar"
+        data-controller="navbar slideover"
         data-navbar-dialog-id-value="{{ mobile.dialog_id }}"
+        data-slideover-dialog-id-value="{{ mobile.dialog_id }}"
         data-navbar-lg-breakpoint-value="1024"
         data-navbar-hide-after-value="64"
         data-navbar-reveal-after-value="48"
@@ -19,8 +20,7 @@
 
         <div class="flex lg:hidden">
             <button type="button"
-                    command="show-modal"
-                    commandfor="{{ mobile.dialog_id }}"
+                    data-action="slideover#open"
                     class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400">
                 <span class="sr-only">Open main menu</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6">
@@ -46,8 +46,7 @@
 
     {# Mobile dialog #}
     <el-dialog>
-        <dialog id="{{ mobile.dialog_id }}" class="backdrop:bg-transparent lg:hidden"
-                data-controller="slideover">
+        <dialog id="{{ mobile.dialog_id }}" class="backdrop:bg-transparent lg:hidden">
             <div tabindex="0" class="fixed inset-0 focus:outline-none">
                 {# Backdrop animé #}
                 <div data-slideover-target="overlay"
@@ -60,13 +59,12 @@
                sm:max-w-sm sm:ring-1 sm:ring-gray-100/10
                transform translate-x-full transition-transform duration-500 md:duration-700 ease-in-out will-change-transform">
                     <div class="flex items-center justify-between">
-                        <a href="#" class="-m-1.5 p-1.5">
+                        <a href="/" class="-m-1.5 p-1.5" aria-label="{{ brand.name }}">
                             <span class="sr-only">{{ brand.name }}</span>
                             <img src="{{ brand.logo.src }}" alt="{{ brand.logo.alt }}" class="h-8 w-auto" />
                         </a>
                         <button type="button"
-                                command="close"
-                                commandfor="{{ mobile.dialog_id }}"
+                                data-action="slideover#close"
                                 class="-m-2.5 rounded-md p-2.5 text-gray-400">
                             <span class="sr-only">Close menu</span>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6">
@@ -80,8 +78,6 @@
                             <div class="space-y-2 py-6">
                                 {% for item in menu %}
                                     <a href="{{ item.href }}"
-                                       command="close"
-                                       commandfor="{{ mobile.dialog_id }}"
                                        class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">
                                         {{ item.label }}
                                     </a>
@@ -89,8 +85,6 @@
                             </div>
                             <div class="py-6">
                                 <a href="{{ auth.login_href }}"
-                                   command="close"
-                                   commandfor="{{ mobile.dialog_id }}"
                                    class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">
                                     {{ auth.login_label }}
                                 </a>

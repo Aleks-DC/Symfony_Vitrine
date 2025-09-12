@@ -1,3 +1,4 @@
+// assets/controllers/navbar_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 /**
@@ -281,22 +282,66 @@ export default class extends Controller {
 
     // Mobile : fermer le dialog PUIS scroller (sans lock)
     onDialogClick(e) {
-        const a = e.target.closest('a[href^="#"]');
+        const a = e.target.closest('a');
         if (!a) return;
-        const hash = a.getAttribute("href");
-        if (!hash || hash === "#") return;
 
+        // Respecter middle-click / Cmd/Ctrl/Shift/Alt / target=_blank
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+        if (a.getAttribute('target') === '_blank') return;
+
+        const href = a.getAttribute('href') || '';
+        if (!href) return;
+
+        // Empêche la nav immédiate, on orchestre: lock + close + nav/scroll
         e.preventDefault();
+
+        // 1) Lock visible immédiatement (garde la barre logo+burger affichée)
+        this.lockVisible   = true;
+        this.lockTarget    = null;
+        this.lockTargetSMT = 0;
+        this.show();
+
         const go = () => {
-            if (history.pushState) {
-                history.pushState(null, "", hash);
-                document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                this.applyActiveForHash(hash); // feedback immédiat côté mobile aussi
-            } else {
-                location.hash = hash;
+            // Cas 1: ancre => scroll (instantané ici)
+            if (href.startsWith('#')) {
+                const target = document.querySelector(href);
+                if (history.pushState) {
+                    history.pushState(null, "", href);
+                    target?.scrollIntoView({ behavior: "auto", block: "start" });
+                    this.applyActiveForHash(href);
+                } else {
+                    location.hash = href;
+                }
+                return;
+            }
+
+            // Cas 2: URL/chemin
+            try {
+                const url  = new URL(href, window.location.href);
+                const here = new URL(window.location.href);
+                const sameOrigin = url.origin === here.origin;
+                const samePath   = url.pathname === here.pathname;
+
+                // / (racine) sur la même page => juste remonter en haut
+                if (sameOrigin && samePath && !url.hash) {
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                    // pas de change d'URL (ou fais location.assign('/') si tu veux reload)
+                    return;
+                }
+
+                // Sinon: vraie navigation
+                window.location.assign(url.href);
+            } catch {
+                // href relatif simple
+                if (href === "/") {
+                    window.scrollTo({ top: 0, behavior: "auto" });
+                    return;
+                }
+                window.location.assign(href);
             }
         };
 
+        // 2) Fermer le dialog (anim) puis exécuter go()
         if (typeof this.dialog?.close === "function") {
             this.dialog.addEventListener("close", go, { once: true });
             try { this.dialog.close(); } catch { go(); }
