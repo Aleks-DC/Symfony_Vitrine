@@ -1,0 +1,103 @@
+name: GitHub Pages (Symfony + Encore)
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  tools: composer
+                  coverage: none
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            # 1) Installer deps PHP SANS scripts (évite cache:clear qui cherche .env)
+            - name: Install PHP deps (no dev, no scripts)
+              run: composer install --no-dev --prefer-dist --no-progress --no-interaction --no-scripts
+
+            # 2) .env minimal éphémère pour booter en prod
+            - name: Create minimal .env
+              run: |
+                  cat > .env << 'EOF'
+                  APP_ENV=prod
+                  APP_DEBUG=0
+                  APP_SECRET=ci_dummy_secret
+                  # DB inutile pour l'export; on met sqlite pour éviter un crash au boot si un service y touche
+                  DATABASE_URL=sqlite:///%kernel.project_dir%/var/ci.db
+                  EOF
+
+            # 3) Installer deps JS et builder Encore
+            - name: Install JS deps
+              run: npm ci
+
+            - name: Build assets (Encore)
+              run: npm run build
+
+            # 4) Démarrer un serveur PHP local pour rendre Twig
+            - name: Start PHP server
+              run: php -S 127.0.0.1:8000 -t public > /dev/null 2>&1 &
+
+            - name: Wait for server
+              run: |
+                  for i in {1..40}; do
+                    if curl -sSf http://127.0.0.1:8000/ > /dev/null; then exit 0; fi
+                    sleep 1
+                  done
+                  echo "Server did not start in time" && exit 1
+
+            # 5) Aspirer le site vers ./docs (statique)
+            - name: Static export to ./docs
+              run: |
+                  rm -rf docs
+                  wget \
+                    --mirror \
+                    --convert-links \
+                    --adjust-extension \
+                    --page-requisites \
+                    --no-parent \
+                    --exclude-directories=/admin,/login \
+                    -P docs \
+                    http://127.0.0.1:8000/
+                  shopt -s dotglob || true
+                  mv docs/127.0.0.1:8000/* docs/ || true
+                  rm -rf docs/127.0.0.1:8000 || true
+                  touch docs/.nojekyll
+                  # 404 support si tu as une page /404
+                  if [ -f docs/404/index.html ] && [ ! -f docs/404.html ]; then cp docs/404/index.html docs/404.html; fi
+
+            # 6) Uploader l'artifact "site statique"
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./docs
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deploy.outputs.page_url }}
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deploy
+              uses: actions/deploy-pages@v4
