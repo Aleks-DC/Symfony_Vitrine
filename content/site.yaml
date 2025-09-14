@@ -1,15 +1,13 @@
-brand:
-    name: "Aleks_DC"
-
+# content/site.yaml
 layout:
     sections:
-        contact: false
+        contact: true
         cta: false
-        footer: false
+        footer: true
         header: true
         hero: true
-        logo_cloud: false
-        pricing: false
+        logo_cloud: true
+        pricing: true
         process: true
         projects: false
         services: true

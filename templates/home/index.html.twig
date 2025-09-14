@@ -4,48 +4,63 @@
 {% block meta_description %}Création de sites vitrines et web-apps performantes en Pays de la Loire et partout en France.{% endblock %}
 
 {% block body %}
-    <twig:Header />
+    {% if is_enabled('header') %}
+        <twig:Header />
+    {% endif %}
 
-    {# Hero #}
-    <a id="accueil" class="scroll-anchor" aria-hidden="true"></a>
-    {% include 'partials/_hero.html.twig' with { hero: hero } %}
+    {% if is_enabled('hero') %}
+        <a id="accueil" class="scroll-anchor" aria-hidden="true"></a>
+        {% include 'partials/_hero.html.twig' with { hero: hero } %}
+    {% endif %}
 
-    {# Services #}
-    <a id="services" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <section>
-        {% include 'partials/_services.html.twig' %}
-    </section>
+    {% if is_enabled('services') %}
+        <a id="services" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
+        <section>{% include 'partials/_services.html.twig' %}</section>
+    {% endif %}
 
-    {# Logo cloud (pas dans le menu) #}
-    {% include 'partials/_logo_cloud.html.twig' %}
+    {% if is_enabled('logo_cloud') %}
+        {% include 'partials/_logo_cloud.html.twig' %}
+    {% endif %}
 
-    {# Méthode #}
-    <a id="methode" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <section>
-        {% include 'partials/_process.html.twig' %}
-    </section>
+    {% if is_enabled('process') %}
+        <a id="methode" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
+        <section>{% include 'partials/_process.html.twig' %}</section>
+    {% endif %}
 
-    {# Stats #}
-    <twig:Stats :items="stats" />
+    {% if is_enabled('stats') %}
+        <twig:Stats :items="stats" />
+    {% endif %}
 
-    {# Tarifs #}
-    <a id="tarifs" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <twig:Pricing :tiers="pricing" />
+    {% if is_enabled('pricing') %}
+        <a id="tarifs" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
+        <twig:Pricing :tiers="pricing" />
+    {% endif %}
 
-    {# Avis #}
-    <a id="avis" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <twig:Testimonials :quotes="testimonials" layout="auto" />
+    {% if is_enabled('testimonials') %}
+        <a id="avis" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
+        <twig:Testimonials :quotes="testimonials" layout="auto" />
+    {% endif %}
 
-    {# CTA #}
-    {% include 'partials/_cta.html.twig' %}
+    {% if is_enabled('cta') %}
+        {% include 'partials/_cta.html.twig' %}
+    {% endif %}
 
-    {# Contact #}
-    <a id="contact" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-    <twig:ContactForm :data="contact"
-        action="{{ path('contact_submit') }}"
-        :values="contactValues"
-        :errors="contactErrors"
-        :contactSuccess="contactSuccess" />
+    {% if is_enabled('contact') %}
+        <a id="contact" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
+        <twig:ContactForm :data="contact"
+                          action="{{ path('contact_submit') }}"
+                          :values="contactValues"
+                          :errors="contactErrors"
+                          :contactSuccess="contactSuccess" />
+    {% endif %}
 
-    <twig:Footer />
+    {% if is_enabled('footer') %}
+        <twig:Footer />
+    {% endif %}
+
+    {% if app.debug %}
+        {# Voir l’état des sections #}
+        {# {{ dump(layout_sections()) }} #}
+    {% endif %}
+
 {% endblock %}

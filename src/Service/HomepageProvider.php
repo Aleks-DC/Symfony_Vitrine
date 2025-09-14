@@ -35,8 +35,12 @@ final readonly class HomepageProvider
         $projectsYaml = $this->loader->get('projects');
         $projects     = $projectsYaml['projects'] ?? [];
 
+        // Map des sections à activer/désactiver
+        $sections = $site['layout']['sections'] ?? [];
+
         return [
             'site'            => $site,
+            'sections'        => $sections,
             'header'          => $header,
             'hero'            => $hero,
             'logo_cloud'      => $logoCloud,
