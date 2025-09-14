@@ -13,8 +13,6 @@ menu:
       href: "#methode"
     - label: "Tarifs"
       href: "#tarifs"
-    - label: "Avis"
-      href: "#avis"
     - label: "Contact"
       href: "#contact"
 
