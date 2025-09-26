@@ -145,6 +145,18 @@ class PageSection
         return $this;
     }
 
+    /** Champ virtuel pour l'édition typée dans EasyAdmin */
+    public function getPropsForm(): array
+    {
+        return $this->props ?? [];
+    }
+
+    public function setPropsForm(array $data): self
+    {
+        $this->props = $data;
+        return $this;
+    }
+
 
 
 }
