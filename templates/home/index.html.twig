@@ -4,63 +4,93 @@
 {% block meta_description %}Création de sites vitrines et web-apps performantes en Pays de la Loire et partout en France.{% endblock %}
 
 {% block body %}
-    {% if is_enabled('header') %}
-        <twig:Header />
-    {% endif %}
 
-    {% if is_enabled('hero') %}
-        <a id="accueil" class="scroll-anchor" aria-hidden="true"></a>
-        {% include 'partials/_hero.html.twig' with { hero: hero } %}
-    {% endif %}
+    {# 1) Macro pour les ancres #}
+    {% macro anchor(id, type) %}
+        {% if id %}
+            {% set cls = (type == 'hero') ? 'scroll-anchor' : 'relative block h-0 invisible -top-[var(--header-h)]' %}
+            <a id="{{ id }}" class="{{ cls }}" aria-hidden="true"></a>
+        {% endif %}
+    {% endmacro %}
+    {% import _self as ui %}
 
-    {% if is_enabled('services') %}
-        <a id="services" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-        <section>{% include 'partials/_services.html.twig' %}</section>
-    {% endif %}
+    {# 2) Config ancres + wrappers #}
+    {% set anchorIds = {
+        'hero': 'accueil',
+        'services': 'services',
+        'process': 'methode',
+        'pricing': 'tarifs',
+        'testimonials': 'avis',
+        'contact': 'contact'
+    } %}
+    {% set wrapInSection = {
+        'services': true,
+        'process': true
+    } %}
 
-    {% if is_enabled('logo_cloud') %}
-        {% include 'partials/_logo_cloud.html.twig' %}
-    {% endif %}
+    {# 3) Boucle principale (version compatible) #}
+    {% for c in components %}
+        {% if c.enabled %}
 
-    {% if is_enabled('process') %}
-        <a id="methode" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-        <section>{% include 'partials/_process.html.twig' %}</section>
-    {% endif %}
+            {{ ui.anchor(anchorIds[c.type]|default(null), c.type) }}
 
-    {% if is_enabled('stats') %}
-        <twig:Stats :items="stats" />
-    {% endif %}
+            {% if c.type == 'header' %}
+                <twig:Header />
 
-    {% if is_enabled('pricing') %}
-        <a id="tarifs" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-        <twig:Pricing :tiers="pricing" />
-    {% endif %}
+            {% elseif c.type == 'footer' %}
+                <twig:Footer />
 
-    {% if is_enabled('testimonials') %}
-        <a id="avis" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-        <twig:Testimonials :quotes="testimonials" layout="auto" />
-    {% endif %}
+            {% elseif c.type == 'stats' %}
+                <twig:Stats :items="c.data" />
 
-    {% if is_enabled('cta') %}
-        {% include 'partials/_cta.html.twig' %}
-    {% endif %}
+            {% elseif c.type == 'pricing' %}
+                <twig:Pricing :tiers="c.data" />
 
-    {% if is_enabled('contact') %}
-        <a id="contact" class="relative block h-0 invisible -top-[var(--header-h)]" aria-hidden="true"></a>
-        <twig:ContactForm :data="contact"
-                          action="{{ path('contact_submit') }}"
-                          :values="contactValues"
-                          :errors="contactErrors"
-                          :contactSuccess="contactSuccess" />
-    {% endif %}
+            {% elseif c.type == 'testimonials' %}
+                <twig:Testimonials :quotes="c.data" layout="auto" />
 
-    {% if is_enabled('footer') %}
-        <twig:Footer />
-    {% endif %}
+            {% elseif c.type == 'contact' %}
+                <twig:ContactForm
+                    :data="c.data"
+                    action="{{ path('contact_submit') }}"
+                    :values="contactValues"
+                    :errors="contactErrors"
+                    :contactSuccess="contactSuccess"
+                />
 
-    {% if app.debug %}
-        {# Voir l’état des sections #}
-        {# {{ dump(layout_sections()) }} #}
-    {% endif %}
+            {% else %}
+                {# fallback components/ puis partials/_ #}
+                {% set candidates = [
+                    'components/' ~ c.type ~ '.html.twig',
+                    'partials/_' ~ c.type ~ '.html.twig'
+                ] %}
+
+                {% if wrapInSection[c.type]|default(false) %}<section>{% endif %}
+                {{ include(
+                    candidates,
+                    { (c.type): c.data, data: c.data, type: c.type },
+                    false,  true
+                ) }}
+                {% if wrapInSection[c.type]|default(false) %}</section>{% endif %}
+            {% endif %} {# <-- ferme le grand if/elseif/else des types #}
+
+            {# 4) Debug optionnel #}
+            {% if app.debug %}
+                {% set rendered = include(
+                    candidates|default([]),
+                    { (c.type): c.data, data: c.data, type: c.type },
+                    false, true
+                ) %}
+                {% set isTwigComponent = c.type in ['header','footer','stats','pricing','testimonials','contact'] %}
+                {% if not isTwigComponent and rendered is empty %}
+                    <div class="p-4 my-4 text-sm text-yellow-900 bg-yellow-50 border border-yellow-200 rounded">
+                        ⚠️ Aucun template trouvé pour <code>{{ c.type }}</code>
+                        (cherché dans <code>components/</code> et <code>partials/</code>).
+                    </div>
+                {% endif %}
+            {% endif %}
+
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
