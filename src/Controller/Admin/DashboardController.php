@@ -36,5 +36,7 @@ final class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Contenu');
         yield MenuItem::linkToCrud('Pages', 'fa fa-file', Page::class);
         yield MenuItem::linkToCrud('Sections', 'fa fa-layer-group', PageSection::class);
+        yield MenuItem::section(); // espace insécable pour décaler le retour au site
+        yield MenuItem::linkToUrl('Retour au site', 'fas fa-arrow-left', $this->generateUrl('app_home'));
     }
 }
