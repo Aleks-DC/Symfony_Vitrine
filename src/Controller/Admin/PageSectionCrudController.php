@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 use App\Content\SectionType;
 use App\Entity\PageSection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\{Actions, Action, Crud, Filters};
+use App\Form\Section\Header\HeaderMenuItemType;
 use App\Form\Section\Header\HeaderPropsType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
@@ -16,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
     TextareaField,
     TextField,
     FormField};
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 final class PageSectionCrudController extends AbstractCrudController
 {
@@ -94,23 +96,21 @@ final class PageSectionCrudController extends AbstractCrudController
 
         yield FormField::addPanel('Contenu de la section')->setIcon('fa fa-sliders');
 
-        $instance    = $this->getContext()?->getEntity()?->getInstance();
-        $currentType = $instance?->getType();
-
-        if ($currentType === SectionType::header) {
-            yield Field::new('propsForm', 'Props')
+        if ($currentType === \App\Content\SectionType::header) {
+            // Champ virtuel "menu" mappé sur props[menu] (et PAS props tout court)
+            yield \EasyCorp\Bundle\EasyAdminBundle\Field\Field::new('menu', 'Menu')
                 ->onlyOnForms()
-                ->setFormType(HeaderPropsType::class)
+                ->setFormType(CollectionType::class)
                 ->setFormTypeOptions([
-                    'data_class' => null,
-                    'empty_data' => [],
+                    'property_path' => 'props[menu]',      // <-- clé du JSON ciblée
+                    'entry_type'    => HeaderMenuItemType::class,
+                    'allow_add'     => true,
+                    'allow_delete'  => true,
+                    'delete_empty'  => true,
+                    'by_reference'  => false,
                 ]);
-            return;
+
+            return; // pas de fallback JSON ici
         }
 
-
-// fallback JSON si autre type
-        yield TextareaField::new('propsJson', 'Props (JSON)')
-            ->setNumOfRows(18)
-            ->setHelp('Choisis/Enregistre le type pour avoir un formulaire dédié.');
-}}
+    }}

@@ -11,32 +11,25 @@ final class Header
 {
     public function __construct(private readonly ConfigLoader $loader) {}
 
-    /** Données exposées au template (déjà normalisées) */
     public array $brand = [];
     public array $menu = [];
     public array $auth = [];
     public array $mobile = [];
 
-    public function mount(): void
-    {
-        // Charge content/header.yaml avec des valeurs par défaut sûres
-        $data = $this->loader->get('header');
+    public function mount(
+        array $brand = [],
+        array $menu = [],
+        array $auth = [],
+        array $mobile = []
+    ): void {
+        $defaults = (array) ($this->loader->get('header') ?? []);
 
-        $this->brand = [
-            'name' => $data['brand']['name'] ?? 'Your Company',
-            'logo' => [
-                'src' => $data['brand']['logo']['src'] ?? 'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500',
-                'alt' => $data['brand']['logo']['alt'] ?? 'Your Company',
-            ],
-        ];
+        // fusion profonde pour objets
+        $this->brand  = array_replace_recursive((array)($defaults['brand']  ?? []), $brand);
+        $this->auth   = array_replace_recursive((array)($defaults['auth']   ?? []), $auth);
+        $this->mobile = array_replace_recursive((array)($defaults['mobile'] ?? []), $mobile);
 
-        $this->menu  = \is_array($data['menu'] ?? null) ? $data['menu'] : [];
-        $this->auth  = [
-            'login_label' => $data['auth']['login_label'] ?? 'Log in',
-            'login_href'  => $data['auth']['login_href']  ?? '#',
-        ];
-        $this->mobile = [
-            'dialog_id' => $data['mobile']['dialog_id'] ?? 'mobile-menu',
-        ];
+        // listes: si la BDD fournit quelque chose, on l'utilise tel quel; sinon YAML
+        $this->menu = $menu !== [] ? $menu : (array)($defaults['menu'] ?? []);
     }
 }

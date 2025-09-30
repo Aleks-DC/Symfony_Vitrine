@@ -35,7 +35,12 @@
             {{ ui.anchor(anchorIds[c.type]|default(null), c.type) }}
 
             {% if c.type == 'header' %}
-                <twig:Header />
+                <twig:Header
+                    :brand="c.data.brand ?? {}"
+                    :menu="c.data.menu ?? []"
+                    :auth="c.data.auth ?? {}"
+                    :mobile="c.data.mobile ?? {}"
+                />
 
             {% elseif c.type == 'footer' %}
                 <twig:Footer />

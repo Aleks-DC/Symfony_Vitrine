@@ -10,26 +10,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class HeaderMenuItemType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $b, array $o): void
     {
-        $builder
-            ->add('label', TextType::class, [
-                'label' => 'Label',
-                'required' => true,
-            ])
-            ->add('href', TextType::class, [
-                'label' => 'Cible (ancre SPA)',
-                'required' => true,
-                'help' => 'Ex: #services, #methode, #tarifs…',
-            ]);
+        $b
+            ->add('label', TextType::class, ['label' => 'Label', 'required' => true])
+            ->add('href',  TextType::class, ['label' => 'Lien (ex: #services)', 'required' => true]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $r): void
     {
-        // chaque item est un ARRAY
-        $resolver->setDefaults([
-            'data_class' => null,
-            'empty_data' => [],
+        $r->setDefaults([
+            'data_class' => null, // chaque item est un array ['label'=>..., 'href'=>...]
+            'empty_data' => function () { return ['label' => '', 'href' => '']; },
         ]);
     }
 }
