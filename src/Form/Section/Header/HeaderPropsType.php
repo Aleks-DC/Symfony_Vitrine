@@ -10,9 +10,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class HeaderPropsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $b, array $o): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $b->add('menu', CollectionType::class, [
+        $builder->add('menu', CollectionType::class, [
             'label'        => 'Menu',
             'required'     => false,
             'entry_type'   => HeaderMenuItemType::class, // <- le sous-formulaire ci-dessous
@@ -23,9 +23,9 @@ final class HeaderPropsType extends AbstractType
         ]);
     }
 
-    public function configureOptions(OptionsResolver $r): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $r->setDefaults([
+        $resolver->setDefaults([
             'data_class' => null, // on édite un array (celui de "props")
             'empty_data' => [],
         ]);
