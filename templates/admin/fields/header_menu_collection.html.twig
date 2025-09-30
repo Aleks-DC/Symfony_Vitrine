@@ -1,0 +1,37 @@
+{# templates/admin/fields/header_menu_collection.html.twig #}
+{% extends '@EasyAdmin/crud/field/collection.html.twig' %}
+
+{% block collection_widget_items %}
+    {% for entryForm in form %}
+        {% embed '@EasyAdmin/crud/field/collection_item.html.twig' with { form: entryForm } %}
+            {# Remplace “Array (N items)” par label — href #}
+            {% block collection_entry_label %}
+                {% set lbl  = form.label is defined ? (form.label.vars.value ?? '') : '' %}
+                {% set href = form.href  is defined ? (form.href.vars.value  ?? '') : '' %}
+                {{ (lbl ?: 'Nouvel élément') }}{% if href %} — <code>{{ href }}</code>{% endif %}
+            {% endblock %}
+
+            {# (optionnel) live-update du header pendant la saisie #}
+            {% block collection_widget_item_end %}
+                {{ parent() }}
+                <script>
+                    (function(){
+                        const item = document.currentScript.closest('.ea-collection-item');
+                        if(!item) return;
+                        const header = item.querySelector('.form-collection-item-label');
+                        function update(){
+                            const lbl  = item.querySelector('[name$="[label]"]')?.value || 'Nouvel élément';
+                            const href = item.querySelector('[name$="[href]"]')?.value  || '';
+                            if(header) header.innerHTML = lbl + (href ? ' — <code>'+href+'</code>' : '');
+                        }
+                        item.addEventListener('input', e => {
+                            if(!e.target.name) return;
+                            if (e.target.name.endsWith('[label]') || e.target.name.endsWith('[href]')) update();
+                        });
+                        update();
+                    })();
+                </script>
+            {% endblock %}
+        {% endembed %}
+    {% endfor %}
+{% endblock %}

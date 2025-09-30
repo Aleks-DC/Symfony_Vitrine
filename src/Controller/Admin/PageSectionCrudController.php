@@ -7,18 +7,15 @@ use App\Content\SectionType;
 use App\Entity\PageSection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\{Actions, Action, Crud, Filters};
 use App\Form\Section\Header\HeaderMenuItemType;
-use App\Form\Section\Header\HeaderPropsType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
     BooleanField,
     ChoiceField,
     CollectionField,
-    Field,
     IntegerField,
     TextareaField,
     TextField,
     FormField};
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 final class PageSectionCrudController extends AbstractCrudController
 {
@@ -111,12 +108,15 @@ final class PageSectionCrudController extends AbstractCrudController
             yield CollectionField::new('menu', 'Menu')
                 ->setFormTypeOption('property_path', 'props[menu]')
                 ->setEntryType(HeaderMenuItemType::class)
-                ->setEntryIsComplex(false)            // << enlève le header “Array (2 items)”
+                ->setEntryIsComplex(true)                 // on garde l’entête repliable
                 ->allowAdd()
                 ->allowDelete()
                 ->setFormTypeOption('by_reference', false)
                 ->setFormTypeOption('prototype', true)
-                ->setFormTypeOption('entry_options', ['label' => false]); // pas de label sur le sous-form
+                ->setFormTypeOption('entry_options', ['label' => false])
+                ->setTemplatePath('admin/fields/header_menu_collection.html.twig'); // <<< ICI
+
+
 
 
             // auth
