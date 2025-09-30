@@ -110,12 +110,14 @@ final class PageSectionCrudController extends AbstractCrudController
             // menu (clé : props.menu)
             yield CollectionField::new('menu', 'Menu')
                 ->setFormTypeOption('property_path', 'props[menu]')
-                ->setFormTypeOption('entry_type', HeaderMenuItemType::class)
-                ->setFormTypeOption('allow_add', true)
-                ->setFormTypeOption('allow_delete', true)
-                ->setFormTypeOption('prototype', true)
+                ->setEntryType(HeaderMenuItemType::class)
+                ->setEntryIsComplex(false)            // << enlève le header “Array (2 items)”
+                ->allowAdd()
+                ->allowDelete()
                 ->setFormTypeOption('by_reference', false)
-                ->setFormTypeOption('entry_options', ['label' => false]); // garde-le, c’est bien
+                ->setFormTypeOption('prototype', true)
+                ->setFormTypeOption('entry_options', ['label' => false]); // pas de label sur le sous-form
+
 
             // auth
             yield TextField::new('login_label', 'Bouton (label)')
