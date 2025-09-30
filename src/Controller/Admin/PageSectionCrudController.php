@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
     BooleanField,
     ChoiceField,
+    CollectionField,
     Field,
     IntegerField,
     TextareaField,
@@ -97,18 +98,34 @@ final class PageSectionCrudController extends AbstractCrudController
         yield FormField::addPanel('Contenu de la section')->setIcon('fa fa-sliders');
 
         if ($currentType === \App\Content\SectionType::header) {
-            // Champ virtuel "menu" mappé sur props[menu] (et PAS props tout court)
-            yield \EasyCorp\Bundle\EasyAdminBundle\Field\Field::new('menu', 'Menu')
-                ->onlyOnForms()
-                ->setFormType(CollectionType::class)
-                ->setFormTypeOptions([
-                    'property_path' => 'props[menu]',      // <-- clé du JSON ciblée
-                    'entry_type'    => HeaderMenuItemType::class,
-                    'allow_add'     => true,
-                    'allow_delete'  => true,
-                    'delete_empty'  => true,
-                    'by_reference'  => false,
-                ]);
+
+            // brand
+            yield TextField::new('brand_name', 'Nom marque')
+                ->setFormTypeOption('property_path', 'props[brand][name]');
+            yield TextField::new('brand_logo_src', 'Logo URL')
+                ->setFormTypeOption('property_path', 'props[brand][logo][src]');
+            yield TextField::new('brand_logo_alt', 'Logo alt')
+                ->setFormTypeOption('property_path', 'props[brand][logo][alt]');
+
+            // menu (clé : props.menu)
+            yield CollectionField::new('menu', 'Menu')
+                ->setFormTypeOption('property_path', 'props[menu]')
+                ->setFormTypeOption('entry_type', HeaderMenuItemType::class)
+                ->setFormTypeOption('allow_add', true)
+                ->setFormTypeOption('allow_delete', true)
+                ->setFormTypeOption('prototype', true)
+                ->setFormTypeOption('by_reference', false)
+                ->setFormTypeOption('entry_options', ['label' => false]); // garde-le, c’est bien
+
+            // auth
+            yield TextField::new('login_label', 'Bouton (label)')
+                ->setFormTypeOption('property_path', 'props[auth][login_label]');
+            yield TextField::new('login_href', 'Bouton (href)')
+                ->setFormTypeOption('property_path', 'props[auth][login_href]');
+
+            // mobile
+            yield TextField::new('mobile_dialog', 'ID du dialog mobile')
+                ->setFormTypeOption('property_path', 'props[mobile][dialog_id]');
 
             return; // pas de fallback JSON ici
         }
