@@ -8,14 +8,17 @@ use App\Entity\PageSection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\{Actions, Action, Crud, Filters};
 use App\Form\Section\Header\HeaderMenuItemType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
+use EasyCorp\Bundle\EasyAdminBundle\Field\{
+    AssociationField,
     BooleanField,
     ChoiceField,
+    CodeEditorField,
     CollectionField,
     IntegerField,
     TextareaField,
     TextField,
     FormField};
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class PageSectionCrudController extends AbstractCrudController
 {
@@ -94,7 +97,7 @@ final class PageSectionCrudController extends AbstractCrudController
 
         yield FormField::addPanel('Contenu de la section')->setIcon('fa fa-sliders');
 
-        if ($currentType === \App\Content\SectionType::header) {
+        if ($currentType === SectionType::header) {
 
             // brand
             yield TextField::new('brand_name', 'Nom marque')
@@ -131,5 +134,22 @@ final class PageSectionCrudController extends AbstractCrudController
 
             return; // pas de fallback JSON ici
         }
+
+        // Fallback d'édition JSON pour toutes les sections NON-header
+        yield CodeEditorField::new('propsJson', 'Contenu (JSON)')
+            ->onlyOnForms()
+            ->setLanguage('js')
+            ->setNumOfRows(20)
+            ->setHelp('Structure attendue par content/<type>.yaml')
+            ->setFormTypeOptions([
+                'attr' => [
+                    'spellcheck' => 'false',
+                    'data-ea-code-editor-line-numbers' => 'true',
+                ],
+                'constraints' => [new Assert\Json()], // bloque l’enregistrement si le JSON est invalide
+            ]);
+
+
+
 
     }}
