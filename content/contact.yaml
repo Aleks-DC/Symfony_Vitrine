@@ -28,7 +28,7 @@ form:
         message: "500 caractères max"
 
     budget_options:
-        - { id: "under-25k", value: "under_25k", label: "Moins de 25 000 €", checked: true }
-        - { id: "25k-50k",   value: "25k-50k",   label: "25 000 – 50 000 €" }
-        - { id: "50k-100k",  value: "50k-100k",  label: "50 000 – 100 000 €" }
-        - { id: "over-100k", value: "over_100k", label: "100 000 € +" }
+        - { id: "under-1k", value: "under_1k", label: "Moins de 1 000 €", checked: true }
+        - { id: "1k-3k",   value: "1k-3k",   label: "1 000 – 3 000 €" }
+        - { id: "3k-7k",  value: "3k-7k",  label: "3 000 – 7 000 €" }
+        - { id: "over-7k", value: "over_7k", label: "7 000 € +" }
