@@ -10,6 +10,7 @@ use App\Entity\Page;
 use App\Entity\PageSection;
 use App\Service\Content\ConfigLoader;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +26,9 @@ class ContentSeedCommand extends Command
     ) { parent::__construct(); }
 
 
+    /**
+     * @throws ReflectionException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $site = $this->loader->get('site');
@@ -32,7 +36,7 @@ class ContentSeedCommand extends Command
 
 
         $page = new Page();
-// slug/title par défaut
+        // slug/title par défaut
         $ref = new \ReflectionProperty($page, 'slug'); $ref->setAccessible(true); $ref->setValue($page, 'home');
         $ref = new \ReflectionProperty($page, 'title'); $ref->setAccessible(true); $ref->setValue($page, 'Accueil');
         $this->em->persist($page);
