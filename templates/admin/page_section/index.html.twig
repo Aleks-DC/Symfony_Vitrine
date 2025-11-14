@@ -1,0 +1,71 @@
+{# templates/admin/page_section/index.html.twig #}
+{# IMPORTANT : on étend le template original EasyAdmin, pas nous-mêmes #}
+{% extends '@!EasyAdmin/crud/index.html.twig' %}
+
+{# On ne touche qu'au corps du tableau #}
+{% block table_body %}
+    <tbody
+        data-controller="page-section-sortable"
+        data-page-section-sortable-url-value="{{ path('admin_page_section_reorder') }}"
+    >
+    {# On reprend la logique d'EasyAdmin : boucle sur les entités #}
+    {% for entity in entities %}
+        {% if not entity.isAccessible %}
+            {# On garde ce flag pour le message "certains résultats sont cachés" #}
+            {% set some_results_are_hidden = true %}
+        {% else %}
+            {# ICI : data-id = clé primaire, utilisé par SortableJS (toArray()) #}
+            <tr data-id="{{ entity.primaryKeyValueAsString }}">
+                {# Colonnes "classiques" : on réutilise les templates de champs EA #}
+                {% for field in entity.fields %}
+                    <td data-label="{{ field.label|raw }}">
+                        {{ include(field.templatePath, {
+                            field: field,
+                            entity: entity
+                        }, with_context = false) }}
+                    </td>
+                {% endfor %}
+
+                {# Colonne Actions (Edit / Delete / etc.) #}
+                <td class="actions {{ ea.crud.showEntityActionsAsDropdown ? 'actions-as-dropdown' }}">
+                    {% if not ea.crud.showEntityActionsAsDropdown %}
+                        {# Mode "boutons en ligne" (ton cas : showEntityActionsInlined()) #}
+                        {% for action in entity.actions %}
+                            {{ include(action.templatePath, {
+                                action: action,
+                                entity: entity,
+                                isIncludedInDropdown: ea.crud.showEntityActionsAsDropdown
+                            }, with_context = false) }}
+                        {% endfor %}
+                    {% else %}
+                        {# Mode "actions dans un dropdown" (au cas où tu l'actives un jour) #}
+                        {% for action in entity.actions %}
+                            {{ include(action.templatePath, {
+                                action: action,
+                                entity: entity,
+                                isIncludedInDropdown: ea.crud.showEntityActionsAsDropdown
+                            }, with_context = false) }}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+    {% else %}
+        {# Cas où il n'y a AUCUNE entité #}
+        <tr>
+            <td colspan="{{ (entities|first.fields ?? [])|length + 1 }}">
+                {{ 'datagrid.no_results'|trans(ea.i18n.translationParameters, 'EasyAdminBundle') }}
+            </td>
+        </tr>
+    {% endfor %}
+
+    {# Message "certains résultats ne sont pas affichés" (droits / permissions) #}
+    {% if some_results_are_hidden %}
+        <tr>
+            <td colspan="{{ (entities|first.fields ?? [])|length + 1 }}">
+                {{ 'datagrid.hidden_results'|trans({}, 'EasyAdminBundle') }}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+{% endblock %}

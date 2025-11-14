@@ -1,0 +1,15 @@
+{# templates/admin/fields/page_section_position.html.twig #}
+
+{# field.value = valeur de "position" #}
+{% set value = field.value %}
+
+<span
+    data-drag-handle
+    style="cursor: grab; user-select: none; padding-right: .25rem;"
+    aria-hidden="true"
+>
+    ☰
+</span>
+
+<span aria-hidden="true">{{ value }}</span>
+<span class="sr-only">Position {{ value }}</span>

@@ -35,7 +35,8 @@ final class PageSectionCrudController extends AbstractCrudController
             ->setDefaultSort(['page' => 'ASC', 'position' => 'ASC'])
             ->showEntityActionsInlined()
             ->setSearchFields(['page.slug', 'page.title', 'type'])
-            ->setPaginatorPageSize(50);
+            ->setPaginatorPageSize(50)
+            ->overrideTemplate('crud/index', 'admin/page_section/index.html.twig');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -58,10 +59,14 @@ final class PageSectionCrudController extends AbstractCrudController
         if ($pageName === Crud::PAGE_INDEX) {
             yield TextField::new('typeLabel', 'Type');
             yield BooleanField::new('enabled', 'Actif')->renderAsSwitch(false);
-            yield IntegerField::new('position', 'Ordre');
+
+            yield IntegerField::new('position', 'Ordre')
+                ->setTemplatePath('admin/fields/page_section_position.html.twig');
+
             yield TextField::new('propsPreview', 'Props');
             return;
         }
+
 
         if ($pageName === Crud::PAGE_DETAIL) {
             yield TextField::new('typeLabel', 'Type');
