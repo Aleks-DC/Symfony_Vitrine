@@ -12,7 +12,7 @@ subtitle: "Expliquez-moi votre besoin : je vous réponds rapidement avec une pre
 form:
     action: "#"        # Remplacera facilement par une route type {{ path('contact_submit') }}
     method: "POST"
-    button_label: "Envoyer le message"
+    button_label: "Envoyer"
 
     labels:
         first_name: "Prénom"
