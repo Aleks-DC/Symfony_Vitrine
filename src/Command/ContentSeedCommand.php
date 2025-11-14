@@ -65,7 +65,7 @@ class ContentSeedCommand extends Command
             $ps->setType($type);
             $ps->setEnabled((bool)($gates[$type->value] ?? true));
             $ps->setPosition($pos++);
-// props = données YAML spécifiques à la section si dispo
+            // props = données YAML spécifiques à la section si dispo
             $ps->setProps($this->loader->get($type->value));
             $this->em->persist($ps);
         }
