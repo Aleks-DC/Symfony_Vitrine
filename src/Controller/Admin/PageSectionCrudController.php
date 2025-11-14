@@ -58,7 +58,7 @@ final class PageSectionCrudController extends AbstractCrudController
 
         if ($pageName === Crud::PAGE_INDEX) {
             yield TextField::new('typeLabel', 'Type');
-            yield BooleanField::new('enabled', 'Actif')->renderAsSwitch(false);
+            yield BooleanField::new('enabled', 'Actif');
 
             yield IntegerField::new('position', 'Ordre')
                 ->setTemplatePath('admin/fields/page_section_position.html.twig');
